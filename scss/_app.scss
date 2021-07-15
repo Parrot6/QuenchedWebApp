@@ -1,0 +1,807 @@
+$quenchedIconBlue: #5fabed;
+$quenchedBlue: #51a2e5;
+$quenchedBlueSelected: #416A8C;
+$quenchedBG: #f5f5f5;
+$quenchedDarkerBG: #e6e6e6;
+$quenchedDanger: #A8FB8484;
+$quenchedConfirm: #A884E349;
+$icon-square-length: 300px;
+$standard-border: 4px solid black;
+$bottomNavHeight: 60px;
+$selectedTabHeight: 3px;
+$defaultMargin: 6px;
+$headerHeight: 40px;
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.standardButton{
+  border-radius: 2px;
+  border: .1px rgba(0, 0, 0, 0.493) solid;
+  background-color: $quenchedBG;
+  padding: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+  @extend .standardShadow;
+}
+.blueStandardButton{
+  @extend .standardButton;
+  width: 80%;
+  font-weight: 400;
+  background-color: $quenchedIconBlue;
+  color: white;
+}
+.standardShadow {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.466);
+}
+#searchbox {
+  width: calc(100% - 12px);
+  margin-left: $defaultMargin;
+  margin-right: $defaultMargin;
+}
+.searchBar {
+  margin-top: $defaultMargin;
+  padding-bottom: $defaultMargin;
+}
+#listView {
+  @extend .standardButton;
+  margin-right: $defaultMargin;
+}
+select {
+  width: calc(100%);
+  text-align-last:center;
+  padding-right: 10px;
+  border-radius: 8px;
+  margin-left: 0px;
+  margin-right: 0px;
+  border: transparent;
+  background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right transparent;
+    -webkit-appearance: none;
+    background-position: right;
+    font-weight: 600;
+    font-size: .95rem;
+}
+option {
+  padding-left: 30px;
+}
+select:focus-visible {
+  outline: transparent;
+}
+.mainWindow {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  background-color: red;
+}
+.quenchedHeader{
+  background-color: $quenchedDarkerBG;
+  border-bottom: .5px solid rgba(0, 0, 0, 0.295);
+  height: $headerHeight;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding-top: 1px;
+}
+.topOptionMenu{
+  font-weight: 300;
+  color: $quenchedIconBlue;
+}
+
+#googleMap{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+    background-color: #f5f5f5;
+    width: 100%;
+}
+.mapBreweryBlocks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+#mapListView{
+  overflow: hidden;
+  flex-grow: 1;
+  position: relative;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+    background-color: #f5f5f5;
+    width: 100%;
+}
+#searchListView {
+  @extend #mapListView;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+.activeFrag {
+  background-color: $quenchedBG;
+  width: 100%;
+  position: relative;
+  flex-grow: 1;
+  margin-bottom: $bottomNavHeight;
+  display: flex !important;
+  flex-direction:column;
+}
+.fragment {
+  display: none;
+}
+.filterToggle {
+  justify-items: center;
+}
+#filterToggle {
+  margin-top: 3px;
+}
+.filterRow{
+  margin-top: 4px;
+}
+.filterRow.first {
+  margin-top: 0px !important;
+}
+.filterBar {
+  flex: 0 1 auto;
+}
+.filterChoice{
+  @extend .standardShadow;
+  font-size: .95rem;
+  margin-left: 4px;
+  margin-right: 4px;
+  background-color: $quenchedBlue;
+  padding: 2px;
+  border: 3px rgb(59, 66, 92);
+  border-style: outset;
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+}
+#filterSearchLoc {
+  display: block;
+  font-size: .7rem;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+}
+.selectedNavBar {
+  width: 100%;
+  height: $selectedTabHeight;
+  position: absolute;
+  bottom: calc(#{$bottomNavHeight} - #{$selectedTabHeight});
+  z-index: 10;
+  .Tab {
+    background-color: transparent;
+    vertical-align: middle;
+  }
+  .activeTab {
+    background-color: $quenchedBlue;
+    border-radius: 8px;
+  }
+}
+.BottomNavBar {
+  position: absolute;
+  width: 100%;
+  height: $bottomNavHeight;
+  bottom:0;
+  background-color: $quenchedDarkerBG;
+  .Navi {
+    color: gray;
+    line-height: 5px;
+    vertical-align: middle;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .activeNav {
+    color: $quenchedIconBlue;
+  }
+}
+
+.banner {
+  font-family: 'Pacifico', cursive;
+  height: 400px;
+  background-image: url("lemonade.jpg");
+  border : {
+    top: $standard-border;
+    bottom: $standard-border;
+	}
+  
+  .slogan {
+  	position: absolute;
+  	border: $standard-border;
+  	top: 200px;
+  	left: 25%;
+  	width: 50%;
+  	height: 200px;
+    background-color: $quenchedBlue;
+    
+    span {
+  		position: absolute;
+  		text-align: center;
+  		line-height: 200px;
+		}
+	}
+}
+
+.container {
+  text-align: center;
+  font-family: 'Pacifico', cursive;
+  
+  .icon {
+  	display: inline-block;
+  	margin: 2%;
+  	border: $standard-border;
+  	font-size: 32px;
+    width: $icon-square-length;
+		height: $icon-square-length;
+	}
+}
+/*--- PIN INFO POPUP -----------*/
+#pinInfoContainer {
+  position: absolute;
+  display: none;
+  float:left;
+  bottom: 0;
+  background-color: white;
+  width: calc(100% - (2 * #{$defaultMargin}));
+  flex: 1;
+  z-index: 3000;
+  margin-left: $defaultMargin;
+  margin-bottom: $defaultMargin;
+  margin-right: $defaultMargin;
+  border-radius: 16px;
+  @extend .standardShadow; 
+}
+.standardButtonBreweryInfo {
+  @extend .standardButton;
+  margin: 2px;
+  margin-left: 0px;
+  background-color: $quenchedDarkerBG;
+  width: calc(100% - 4px);
+}
+#closeInfoContainer{
+  position: absolute;
+  z-index: 300;
+  font-size: 35px !important;
+  right: 3;
+  top: 3;
+  color: black;
+}
+#Brewery {
+  display: inline-block;
+  width: calc(100%);
+  white-space: nowrap;
+  line-height: 1.4rem;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+#breweryPic {
+  max-height: calc(100% - 8px);
+  max-width: calc(100% - 4px);
+  border-radius: 16px;
+  margin-top: 4px;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  @extend .standardShadow; 
+}
+#Address {
+  display: inline-block;
+  width: calc(100%);
+  font-size: .8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#AddressExtra, #Website {
+  font-size: .8rem;
+  display: none;
+}
+.pinInfoCol {
+  margin-top: 6px;
+  margin-left: 6px;
+}
+.pinfInfoFilters{
+    margin-top: 2px;
+    padding-right: 4px;
+    margin-bottom: 4px;
+    width: 100%;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: wrap;
+  .filterChoice {
+    box-shadow:none;
+    //flex-grow: 1;
+    border: 1px solid black;
+    line-height: 1rem;
+    margin-left: 0px;
+    padding: 0px;
+    padding-left: 2px;
+    padding-right: 2px;
+    margin: 1px;
+    font-size: .7rem;
+    display: inline-block;
+  }
+}
+
+/*---  QUENCHED dropdown menu ----------------*/
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #2980B9;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  width: calc(100% - #{$defaultMargin} - #{$defaultMargin});
+  margin-left: $defaultMargin;
+  margin-right: $defaultMargin;
+  overflow: auto;
+  box-shadow: 0px 8px 30px 0px rgba(4,0,0,4);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: red;
+  background-color: lightpink;
+  font-weight: 500;
+  height: 35px;
+  border-style: groove;
+  border-color: #d5f0ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  border-width: 2px;
+}
+.dropdown-content a:hover {
+  cursor: pointer;
+  font-weight: 500;
+  border-width: 6px;
+}
+.dropdown-content button {
+  font-size: small;
+  color: black;
+  background-color: #d5f0ff;
+  padding: 6px 6px;
+  text-decoration: none;
+  display: block;
+  border-width: 6px;
+  border: 6px solid #d5f0ff;
+}
+
+.dropdown button:hover {
+  background-color: #4fbbfa;
+  color: white;
+  border-color: #d5f0ff;
+  border-style: groove;
+  border-width: 6px;
+}
+
+.show {display: block;}
+/*---- FILTER BUTTONS ------*/
+.filterChoice{
+  @extend .standardShadow;
+  font-size: .95rem;
+  margin-left: 4px;
+  margin-right: 4px;
+  background-color: $quenchedBlue;
+  padding: 2px;
+  border: 2px rgb(59, 66, 92);
+  border-style: outset;
+  border-radius: 16px;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+}
+.filters:not(.active){
+  @extend .standardShadow;
+  background-color: $quenchedBG;
+  border: 2px rgb(59, 66, 92);
+  border-style: outset;
+  color: rgb(0, 0, 0);
+  white-space: nowrap;
+  padding: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
+  font-size: .95rem;
+  margin-left: 4px;
+  margin-right: 4px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+.filters.active{
+  @extend .standardShadow;
+  background-color: #5fabed;
+  color: rgb(255, 255, 255);
+  border: 2px rgb(59, 66, 92);
+  border-style: inset;
+  white-space: nowrap;
+  padding: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+  text-align: center;
+  font-size: .95rem;
+  margin-left: 4px;
+  margin-right: 4px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+/****
+SOCIAL PAGE
+*******/
+#socialPostsContainer{
+  overflow: hidden;
+  flex-grow: 1;
+  position: relative;
+}
+#socialPosts {
+  position: absolute;
+  margin-top: 4px;
+  padding-top: 2px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 2px;
+  overflow: auto;
+}
+.socialTitle {
+  margin: $defaultMargin;
+  font-size: 24px;
+  font-weight: 600;
+}
+.socialButtonHolder {
+  margin-left: $defaultMargin;
+  margin-right: $defaultMargin;
+  border: 1px solid black;
+  padding-right: 8px;
+  width: 100%;
+  border-radius: 8px;
+}
+.socialSortButton {
+  white-space: nowrap;
+  overflow: hidden;
+  margin-left: $defaultMargin;
+  margin-right: $defaultMargin;
+}
+.socialButtonMakePost{
+  @extend .standardShadow;
+  margin-left: $defaultMargin;
+  margin-right: $defaultMargin;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  border-radius: 8px;
+}
+.activeSort{
+  font-weight: 500;
+  color: $quenchedIconBlue;
+}
+/*****************************
+SOCIAL CARDS
+***************************/
+.cardFrame {
+  @extend .standardShadow;
+  margin: $defaultMargin;
+  margin-top: 0px;
+  flex: 0;
+  background-color: white;
+  border-radius: 8px;
+}
+.cardImage {
+  height: 340px;
+  overflow: hidden;
+  >img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+}
+.cardHeader {
+  padding: 2px;
+  padding-left: 6px;
+  flex: 0 1;
+  font-weight: 400;
+}
+.cardFooter {
+  padding: 4px;
+  padding-left: 6px;
+  flex: 0 1;
+  font-weight: 500;
+}
+.socialBreweryName{
+  padding-left: 4px;
+  line-height: 1.1rem;
+}
+.socialBreweryLocation{
+  padding-left: 4px;
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1rem;
+}
+/*****************************
+BREWERY CARDS
+***************************/
+.mapBreweryBlocks {
+  padding-left: 6px;
+}
+.breweryCardFrame {
+  @extend .standardShadow;
+  overflow: hidden;
+  margin-top: 0px;
+  height: calc(100% - 8px);
+  margin: 6px;
+  margin-left: 0px;
+  background-color: white;
+  border-radius: 8px;
+}
+.breweryCardImage {
+  height: 160px;
+  overflow: hidden;
+  >img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+}
+.breweryCardFooter {
+  padding: 4px;
+  padding-left: 6px;
+  height: 20%;
+  font-weight: 500;
+}
+.breweryBreweryName{
+  display: inline-block;
+  width: calc(100%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 4px;
+  padding-right: 4px;
+  line-height: 1.1rem;
+}
+.breweryBreweryLocation{
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: 1rem;
+}
+/***********************
+SEARCH FRAGMENT
+***********************/
+.searchNavBar {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  background-color: $quenchedBG;
+  font-weight: 400;
+  .searchNavi {
+    color: gray;
+    vertical-align: middle;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+  .activeSearchNav {
+    color: black;
+  }
+}
+.searchNavSelected{
+  width: 100%;
+  height: 3px;
+  margin-bottom: 8px;
+  .activeSearchOption {
+    border-radius: 8px;
+  }
+  .activeSearchOption.active {
+    background-color: $quenchedIconBlue;
+  }
+}
+.searchFilterBar{
+  flex: 0 1 auto;
+}
+.favoritesTitle {
+  line-height: 1rem;
+  font-weight: 500;
+}
+#searchByNameTab {
+  padding: 19px;
+  padding-left: 0px;
+    padding-right: 0px;
+    display: none;
+  >input {
+    background-color: #ffffff;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+    width: 80%;
+  }
+}
+#searchWithFiltersTab {
+ //todo
+}
+/**********************************
+  B R E W E R Y - P R O F I L E
+*********************************/
+#BreweryProfile {
+  position: absolute;
+  top: $headerHeight;
+  left: 0;
+  height: calc(100% - #{$headerHeight});
+  width: 100%;
+  background-color: $quenchedBG;
+  z-index: 9999;
+}
+#profileBrewery {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 1.0rem;
+  white-space: nowrap;
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#profileAD {
+  background-color: white;
+  height: 80px;
+  text-align: center;
+}
+.breweryProfileScrollableContainer {
+  height: 100%;
+  overflow: hidden;
+  flex-grow: 1;
+  position: relative;
+}
+
+.breweryProfileScrollable{
+  position: absolute;
+  padding-top: 2px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-bottom: 2px;
+  overflow: auto;
+}
+.breweryProfilePod {
+  margin: $defaultMargin;
+  border-radius: 8px;
+  padding: 2px 8px;
+  background-color:white;
+  @extend .standardShadow
+}
+#socialImagesWrapper {
+  height: 156px;
+  overflow: hidden;
+  flex-grow: 1;
+  position: relative;
+}
+#socialImagesScroller{
+  position: absolute;
+  padding-top: 2px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin-left: 2px;
+  padding-left:6px;
+  margin-bottom: 2px;
+  overflow: auto;
+}
+.socialCardFrame {
+  @extend .standardShadow;
+  overflow: hidden;
+  margin-top: 0px;
+  margin: 6px;
+  margin-left: 0px;
+  background-color: white;
+  border-radius: 8px;
+}
+.socialCardImage {
+  height: 140px;
+  overflow: hidden;
+  >img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+}
+.myhr{
+  background-color: rgba(0, 0, 0, 0.433);
+  height: 1px;
+}
+
+.image-slider-wrapper{
+  position: relative;
+  width: 100%;
+}
+.sliderLeft {
+  top: 40%;
+  padding: 7px 0px;
+  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 0px 8px 8px 0px;
+}
+.sliderRight {
+  top: 40%;
+  padding: 7px 0px;
+  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px 0px 0px 8px;
+}
+// .sliderLeft:hover, .sliderRight:hover {
+//   background-color: rgba(0, 0, 0, 0.3);
+//   color: white;
+// }
+#image_slider {
+  height: 200px;
+  overflow: hidden;
+  >img {
+    display: none;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+  .activeSlide {
+    display: block !important;
+  }
+}
+.backpageButton {
+  line-height: 40px !important;
+  position: relative !important;
+  font-weight: 900 !important;
+  font-size: 45px !important;
+  left: -7;
+}
+/***********************************
+S E A R C H  R E S U L T S
+***********************************/
+#seachResultsHolder {
+  padding-left: 6px;
+}
+
+/***********************************
+LOGIN PANEL
+***********************************/
+#loginPanel {
+  //display: none;
+  position: absolute;
+  background: white;
+  border: 3px black ridge;
+  z-index: 999999;
+  top: 5%;
+  left: 5%;
+  width: 90%;
+  height: 90%;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  input {
+    width: 100%;
+  }
+  .row {
+    min-height: 10%;
+  }
+  #startExploring {
+    margin: 20px;
+  }
+}

@@ -1,0 +1,87 @@
+<html>
+    <!--🦍💎 🍌 Buy, Hodl 🍌 💎 🦍-->
+    <!--Author: Parrot6
+        Discord: Parrot6#7225
+        Reddit: u/Killerparrot6
+    -->
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale = 1.0, 
+        maximum-scale=1.0, user-scalable=no" />     
+        <meta name="theme-color" content="#51a2e5">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="scss/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="manifest" href="./manifest.json">
+        <title>Quenched</title>
+      </head>
+      <body>
+
+        <!-- MAIN APPLICATION -->
+        <div class="mainWindow">
+              <div id="quenchedHeader" class="row quenchedHeader no-gutters">
+                <div onclick="history.back()" class="col-1 no-gutters">
+                  <span class="material-icons backpageButton">chevron_left</span>
+                </div>
+                <div class="col-10 no-gutters my-auto">
+                  <img
+                      src="./assets/images/quenched_logo.png"
+                      alt="QUENCHED"
+                      height="30" />
+                </div>
+                <div class="col-1 no-gutters topOptionMenu text-center my-auto">
+                  <img
+                      src="./assets/images/optionsMenu.svg"
+                      alt="options"
+                      height="26"
+                      width="28" />
+                </div>
+              </div>
+                      <!-- BREWERY PROFILE POPUP -->
+        <div id="BreweryProfile" class="breweryProfilePanel">
+          <div class="row h-100 no-gutters">
+            <div class="col no-gutters" style="display: flex;
+            flex-direction: column;
+            height: 100%;">
+            <div id="searchStatement" class="row text-center" style="display: inline-block; line-height: 1.2rem;">Search results for Name</div>
+            <div class="breweryProfileScrollableContainer row no-gutters">
+                <div class="breweryProfileScrollable col no-gutters">
+                  <div id="seachResultsHolder" class="mapBreweryRow row no-gutters">
+
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          </div>
+           <!--BREWERY CARD-->
+                  <script id="breweryCardTemplate" type="text/html">
+                    <div class="breweryCardFrame">
+                    <div class="breweryCardHeader">
+                    <div class="breweryCardImage"><img src="{imageUrl}" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}"/></div>
+                    <div class="breweryCardFooter">
+                      <div class="row no-gutters">
+                        <div class="col no-gutters">
+                          <div class="breweryBreweryName row no-gutters">{Brewery}</div>
+                          <div class="breweryBreweryLocation row no-gutters float-right">{Location}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </script>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="assets/generalScripts.js" type="text/javascript"></script>
+        <script src="assets/breweryBlocks.js" type="text/javascript"></script>
+        <script src="assets/brewerySearchScripts.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+      </body>
+    </html>

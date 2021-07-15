@@ -1,0 +1,334 @@
+<html>
+    <!--🦍💎 🍌 Buy, Hodl 🍌 💎 🦍-->
+    <!--Author: Parrot6
+        Discord: Parrot6#7225
+        Reddit: u/Killerparrot6
+    -->
+    <!doctype html>
+    <html lang="en">
+      <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale = 1.0, 
+        maximum-scale=1.0, user-scalable=no" />     
+        <meta name="theme-color" content="#51a2e5">
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="996484988122-ijmgp9b4ela8hqupg09ch3l2sknju5sq.apps.googleusercontent.com">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <!-- Bootstrap CSS -->
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="scss/main.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="manifest" href="./manifest.json">
+        <title>Quenched</title>
+      </head>
+      <body>
+
+        <!-- MAIN APPLICATION -->
+        <div class="mainWindow">
+              <div id="quenchedHeader" class="row quenchedHeader no-gutters" style="padding-left: 12px !important;">
+                <div class="col-11 no-gutters my-auto">
+                  <img
+                      src="./assets/images/quenched_logo.png"
+                      alt="triangle with all three sides equal"
+                      height="30" />
+                </div>
+                <div class="col-1 no-gutters topOptionMenu text-center my-auto">
+                  <img
+                      src="./assets/images/optionsMenu.svg"
+                      alt="triangle with all three sides equal"
+                      height="26"
+                      width="28" />
+                </div>
+                <div id="loginPanel">
+                  <div class="col no-gutters">
+                    <div class="row no-gutters justify-content-center"><img src="./assets/images/quenched_logo.png" style="max-width: 90%; height: 50px; margin-top: 30px; margin-bottom: 30px; object-fit: scale-down;"></div>
+                    <div class="row no-gutters">
+                      <div class="col-4"><label>Username:</label></div>
+                      <div class="col-8"><input type="text"></div>
+                    </div>
+                    <div class="row no-gutters">
+                      <div class="col-4"><label>Zipcode:</label></div>
+                      <div class="col-8"><input type="number"></div>
+                    </div>
+                    <div class="row no-gutters text-center">You are not signed in, to use any social features please log in:</div>
+                    <script>
+                      function onSignIn(data){
+                        console.log(data);
+                      }
+                    </script>
+                    <div class="row no-gutters justify-content-center"><div class="g-signin2" data-onsucess="onSignIn" data-theme="dark"></div></div>
+                    <div class="row no-gutters"></div>
+                    <div id="startExploring" class="row no-gutters justify-content-center"><button class="blueStandardButton" onclick="">Start Exploring</button></div>
+                  </div>
+                </div>
+              </div>
+              <!--------------------------------
+              ######        M A P     ##########
+              ---------------------------------->
+              <div id="mapFragment" class="row fragment activeFrag no-gutters">
+                <div class="col no-gutters filterBar">
+                  <div class="row no-gutters searchBar">
+                    <div class="col-2 d-flex justify-content-center no-gutters" onclick="toggleFilterContainer(mapFilterBar)" id="filterToggle">
+                      <i class="material-icons" style="font-size:24px">import_export</i>Filters
+                    </div>
+                    <div class="col no-gutters">
+                      <input  name="search" type="search" onsearch="doSearch(this)" id="searchbox" >
+                      </input>
+                      <div id="myDropdown" class="dropdown-content">
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <button onclick="toggleMapListView()" id="listView">
+                        LIST VIEW
+                      </button>
+                    </div>
+                  </div>
+                  <div id="mapFilterBar" style="display: block;">
+                    <div class="row filterRow first no-gutters">
+                      <div onclick="toggle(crawable, this)" class="Filters col">Crawlable</div>
+                      <div onclick="toggle(inHouseKitchen, this)" class="Filters col">In House Kitchen</div>
+                      <div onclick="toggle(familyFriendly, this)" class="Filters col">Family Friendly</div>
+                    </div>
+                    <div class="row filterRow no-gutters">
+                      <div onclick="toggle(dogFriendly, this)" class="Filters col">Dog Friendly</div>
+                      <div onclick="toggle(outdoorSeating, this)" class="Filters col">Outdoor Seating</div>
+                      <div class="Filters col"><Select onchange="updateRadius(this)">
+                        <option value="25">25 Miles</option>
+                        <option value="50">50 Miles</option>
+                        <option value="100">100 Miles</option>
+                        <option value="-1">Any Dist.</option>
+                      </Select></div>
+                    </div>
+                    <div class="row" id="filterSearchLoc">
+                      <div class="currentSearchArea">Radius based on location: Charleston, SC</div>
+                    </div>
+                  </div>
+                </div>
+                <!--MAP IS HERE-->
+                <div id="googleMap" class="row no-gutters"></div>
+                <div id="mapListView" style="display: none;" class="row no-gutters">
+                  <div id="" class="mapBreweryBlocks">
+                     <div id="mapListBreweries" class="mapBreweryRow row no-gutters">
+
+                     </div>
+                  </div>
+                </div>
+                <!--MAP IS HERE-->
+                <div id="pinInfoContainer">
+                  <div class="row v-100 no-gutters">
+                    <div class="pinInfoCol col-8 no-gutters">
+                      <div id="UniqueID" style="display: none">1</div>
+                      <div id="Brewery" class="row no-gutters">NAME</div>
+                      <div id="Address" class="row no-gutters">ADDRESS</div>
+                      <div id="AddressExtra" class="row no-gutters">PHONE NUMBER</div>
+                      <div id="Website" class="row no-gutters">WEBSITE</div>
+                      <div id="openBrewery" class="row no-gutters"><button onclick="openBrewery(UniqueID.innerText)" class="standardButtonBreweryInfo">OPEN PROFILE</button></div>
+                      <div class="pinfInfoFilters row no-gutters">
+                        <button id="infoFam" class="filterChoice">Family Friendly</button>
+                        <button id="infoDog" class="filterChoice">Dog Friendly</button>
+                        <button id="infoOut" class="filterChoice">Outdoor Seating</button>
+                        <button id="infoCra" class="filterChoice">Crawlable</button>
+                        <button id="infoInH" class="filterChoice">In House Kitchen</button>
+                      </div>
+                    </div>
+                    <div class="col no-gutters text-right pinInfoImageContainer">
+                      <div id="closeInfoContainer" onclick="closeInfoContainer()">
+                        <span style="font-size: 30px;" class="material-icons">
+                        close
+                        </span>
+                      </div>
+                      <img id="breweryPic" src="https://www.newrivervalleyva.org/wp-content/uploads/2021/04/040721BreweriesNRVBlog-1030x687.jpg" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <!--------------------------------
+              ######     S E A R C H   #########
+              ---------------------------------->
+              <div id="searchFragment" class="row fragment no-gutters">
+                  <div id="searchFilterBar" style="display: block;" class="col no-gutters searchFilterBar">
+                    <div class="row searchNavBar no-gutters">
+                      <div id="filterSearch" onclick="toggleSearchOption(this)" class="col searchNavi activeSearchNav">SEARCH WITH FILTERS</div>
+                      <div id="namefilterSearch" onclick="toggleSearchOption(this)" class="col searchNavi">SEARCH BY NAME</div>
+                    </div>
+                    <div class="row searchNavSelected no-gutters">
+                      <div id="filterSearchSelected" class="col activeSearchOption active"></div>
+                      <div id="namefilterSearchSelected" class="col activeSearchOption"></div>
+                    </div>
+                    <div id="searchWithFilterTab">
+                    <div class="row filterRow first no-gutters">
+                      <div onclick="toggleSearchFilter(searchCrawable, this)" class="Filters col">Crawlable</div>
+                      <div onclick="toggleSearchFilter(searchInHouseKitchen, this)" class="Filters col">In House Kitchen</div>
+                      <div onclick="toggleSearchFilter(searchFamilyFriendly, this)" class="Filters col">Family Friendly</div>
+                    </div>
+                    <div class="row filterRow no-gutters">
+                      <div onclick="toggleSearchFilter(searchDogFriendly, this)" class="Filters col">Dog Friendly</div>
+                      <div onclick="toggleSearchFilter(searchOutdoorSeating, this)" class="Filters col">Outdoor Seating</div>
+                      <div class="Filters col"><Select onchange="updateRadius(this)">
+                        <option value="25">25 Miles</option>
+                        <option value="50">50 Miles</option>
+                        <option value="100">100 Miles</option>
+                        <option value="-1">Any Dist.</option>
+                      </Select></div>
+                    </div>
+                    <div class="row" id="filterSearchLoc">
+                      <div class="currentSearchArea">Radius based on location: Charleston, SC</div>
+                    </div>
+                    <div class="text-center"><button onclick="openSearchByFilter()" class="blueStandardButton">SEARCH</button></div>
+                  </div>
+                  <div id="searchByNameTab" class="text-center">
+                    <input type="search" id="searchName" placeholder="Enter Brewery Name">
+                    <div class="text-center"><button style="margin-top: 10px" onclick="openSearchByName(searchName.value)" class="blueStandardButton">SEARCH</button></div>
+                  </div>
+                    <hr class="my-2"/>
+                    <div class="text-center favoritesTitle">Favorited Breweries</div>
+                  </div>
+                <div id="searchListView" class="row no-gutters">
+                  <div id="" class="mapBreweryBlocks">
+                    <div id="searchListBreweries" class="mapBreweryRow row no-gutters">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--------------------------------
+              ######     S O C I A L   #########
+              ---------------------------------->
+              <div id="socialFragment" class="row fragment no-gutters">
+                <div class="col no-gutters" style="display: flex;
+                flex-direction: column;
+                height: 100%;">
+                  <div class="socialTitle row no-gutters" style="justify-content: center;">ROLL OUT THE BARREL!</div>
+                  <div class="row no-gutters">
+                    <div class="col-10 no-gutters" style="padding-right: 6px;">
+                      <div class="row no-gutters socialButtonHolder" style="justify-content: center;">
+                        <div onclick="sortByNew(this)" class="col text-center socialSortButton activeSort">NEW</div>
+                        <div onclick="sortByTop(this)" class="col text-center socialSortButton">TOP</div>
+                        <div onclick="sortByLocal(this)" class="col text-center socialSortButton">LOCAL</div>
+                        <div onclick="sortMyPosts(this)" class="col-auto text-center socialSortButton">MY POSTS</div>
+                      </div>
+                    </div>
+                    <div class="col no-gutters socialButtonMakePost">
+                      <i class="material-icons" style="font-size:24px">local_see</i>
+                    </div>
+                  </div>
+
+                  <div id="socialPostsContainer">
+                    <div id="socialPosts" class="">
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row selectedNavBar no-gutters">
+                  <div id="mapNavSelector" class="col Tab activeTab"></div>
+                  <div id="searchNavSelector" class="col Tab"></div>
+                  <div id="socialNavSelector" class="col Tab"></div>
+              </div>
+              <div class="row BottomNavBar no-gutters">
+                <div onclick="selectTab(this)" id="mapNav" class="col Navi activeNav no-gutter">
+                  <br/><i class="material-icons" style="font-size:36px">map</i>
+                  <br/>Brewery Map
+              </div>
+                <div onclick="selectTab(this)" id="searchNav" class="col Navi no-gutter"></br><i class="material-icons" style="font-size:36px">folder_open</i></br>Search</div>
+                <div onclick="selectTab(this)" id="socialNav" class="col Navi no-gutter"></br><i class="material-icons" style="font-size:36px">local_see</i></br>Social</div>
+              </div>
+          </div>
+        <script>
+          function onSignIn(data){
+            console.log(data);
+          }
+          function selectTab(tab){
+            document.getElementById("mapFragment").classList.remove("activeFrag");
+            document.getElementById("searchFragment").classList.remove("activeFrag");
+            document.getElementById("socialFragment").classList.remove("activeFrag");
+            document.getElementById("mapNav").classList.remove("activeNav");
+            document.getElementById("searchNav").classList.remove("activeNav");
+            document.getElementById("socialNav").classList.remove("activeNav");
+            document.getElementById("mapNavSelector").classList.remove("activeTab");
+            document.getElementById("searchNavSelector").classList.remove("activeTab");
+            document.getElementById("socialNavSelector").classList.remove("activeTab");
+            switch(tab.id){
+              case "mapNav":
+                document.getElementById(tab.id).classList.add("activeNav");
+                document.getElementById(tab.id+"Selector").classList.add("activeTab");
+                document.getElementById("mapFragment").classList.add("activeFrag");
+                break;
+              case "searchNav":
+                loadInFavorites(null);
+                document.getElementById(tab.id).classList.add("activeNav");
+                document.getElementById(tab.id+"Selector").classList.add("activeTab");
+                document.getElementById("searchFragment").classList.add("activeFrag");
+                break;
+              case "socialNav":
+                fetchSocials();
+                document.getElementById(tab.id).classList.add("activeNav");
+                document.getElementById(tab.id+"Selector").classList.add("activeTab");
+                document.getElementById("socialFragment").classList.add("activeFrag");
+                break;
+              default:
+                break;
+            }
+          }  
+        </script>
+        <!--SOCIAL CARD-->
+        <script id="socialCardTemplate" type="text/html">
+          <div class="cardHeader">
+            <div class="row no-gutters">
+              <div class="col">{User}</div>
+              <div class="col-1 text-center"><img
+                src="./assets/images/socialTripleDot.svg"
+                alt="like this image"
+                height="25"
+                width="20" /></div>
+            </div>
+          </div>
+          <div class="cardImage"><img src="{imageUrl}" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}"./></div>
+          <div class="cardFooter">
+            <div class="row no-gutters">
+              <div class="col-1 no-gutters my-auto text-center">{Likes}</div>
+              <div class="col-1 no-gutters my-auto"><img
+                src="./assets/images/mugEmpty.svg"
+                alt="like this image"
+                height="30"
+                width="30" />
+              </div>
+              <div class="socialNameAndLocHolder col no-gutters">
+                <div class="socialBreweryName row no-gutters">{Brewery}</div>
+                <div class="socialBreweryLocation row no-gutters">{Location}</div>
+              </div>
+              <div class="col-1 no-gutters"></div>
+            </div>
+          </div>
+          </script>
+          <!--BREWERY CARD-->
+          <script id="breweryCardTemplate" type="text/html">
+            <div class="breweryCardFrame">
+            <div class="breweryCardHeader">
+            <div class="breweryCardImage"><img src="{imageUrl}" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}"/></div>
+            <div class="breweryCardFooter">
+              <div class="row no-gutters">
+                <div class="col no-gutters">
+                  <div class="breweryBreweryName row no-gutters">{Brewery}</div>
+                  <div class="breweryBreweryLocation row no-gutters float-right">{Location}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </script>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="assets/generalScripts.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="assets/mapScripts.js" type="text/javascript"></script>
+        <script src="assets/socialScripts.js" type="text/javascript"></script>
+        <script src="assets/searchScripts.js" type="text/javascript"></script>
+        <script src="assets/breweryBlocks.js" type="text/javascript"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACqFLMX07OSsE_OPdmoyyxDXKdOVt7QJ4&callback=myMap"></script>
+      </body>
+    </html>

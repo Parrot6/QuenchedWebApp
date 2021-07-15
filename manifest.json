@@ -1,0 +1,14 @@
+{
+    "background_color": "blue",
+    "description": "Start your next craft brewery adventure",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "icons": [
+      {
+        "128" : "quenchedQ128.jpg"
+      }
+    ],
+    "name": "Quenched - Craft Brewery Finder",
+    "short_name": "Quenched",
+    "start_url": "./index.html"
+  }
