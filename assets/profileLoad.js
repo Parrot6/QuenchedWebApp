@@ -1,6 +1,8 @@
 var currentBrewery;
-function loadpage(){
-    currentBrewery = JSON.parse(sessionStorage.getItem("currentBrewery"));
+function loadpage(currentBrewery){
+  this.currentBrewery = currentBrewery;
+  //console.log(id, Breweries, Breweries.get(id));
+    //var currentBrewery = Breweries.get(id);
     if(currentBrewery.WebSite){
       profileWebSite.innerHTML = "<a href='" + validateText(currentBrewery.WebSite) + "' target='_blank'>" + currentBrewery.WebSite + '</a>';
     } else {
@@ -54,18 +56,82 @@ function loadpage(){
         profileFilterHolder.style.display = "none";
       }
       var images = currentBrewery.Image || [];
-      console.log(images);
       var i = 0;
       var slides = document.getElementsByClassName('picSlide');
       for(var i = slides.length-1; i >= 0; i--){
         if(i > images.length - 1 && slides.length > 1){
-          console.log(slides.length);
           slides[i].remove();
         } else {
           slides[i].src = images[i];
         }
       }
+    setFavoriteHeartState(currentBrewery.UniqueID);
     loadSocialImages();
+}
+function setFavoriteHeartState(uniqueID){
+  if(Favorites.has(uniqueID)){
+    favoritesHeart.src = "./assets/images/favorite_plusRed.svg";
+  } else {
+    favoritesHeart.src = "./assets/images/favorite_plus.svg";
+  }
+}
+function addOrRemoveFavorite(id){
+  if(Favorites.has(id)){
+    var json = {};
+    json['email'] = User["email"];
+    json['UniqueID'] = id;
+
+    var request = new XMLHttpRequest()
+    request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/remove_favorite', true);
+    request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+    
+    // Open a new connection, using the GET request on the URL endpoint
+    //request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/login', true)
+
+    request.onload = function () {
+      favsUpToDate = false;
+      // Begin accessing JSON data here
+      //var data = JSON.parse(this.response)
+      if (request.status >= 200 && request.status < 400) {
+        console.log("removed", json);
+        Favorites.delete(id);
+        setFavoriteHeartState(id);
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    // Send request
+    request.send(JSON.stringify(json))
+  } else {
+    var json = {};
+    json['email'] = User["email"];
+    json['UniqueID'] = id;
+
+    var request = new XMLHttpRequest()
+    request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/add_favorite', true);
+    request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+    
+    // Open a new connection, using the GET request on the URL endpoint
+    //request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/login', true)
+
+    request.onload = function () {
+      favsUpToDate = false;
+      // Begin accessing JSON data here
+      //var data = JSON.parse(this.response)
+      if (request.status >= 200 && request.status < 400) {
+        Favorites.set(Number(id), Breweries.get(Number(UniqueID)));
+        setFavoriteHeartState(id);
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    // Send request
+    request.send(JSON.stringify(json))
+  }
 }
 function validateText(str)
 {
@@ -77,6 +143,7 @@ function validateText(str)
 }
 var socialPosts = [];
 function loadSocialImages(){
+socialPosts = [];
 var brewID = currentBrewery.UniqueID;
 var request = new XMLHttpRequest()
 // Open a new connection, using the GET request on the URL endpoint
@@ -96,14 +163,127 @@ request.onload = function () {
 // Send request
 request.send()
 }
-function createSocialImageBlog() {
-    createBlocks(socialPosts, socialImagesScroller);
+function createReportBreweryPopup(name, id){
+  createPopup("Report Brewery",
+  `
+  <div class="col">
+    <div class="row no-gutters">
+      <div class="col-auto pr-2">
+          Brewery:
+        </div>
+        <div class="col">
+          ${name}
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-auto"">
+          Issue Catagory:
+        </div>
+        <div class="col">
+          <Select id="reportBreweryProfile">
+            <option>Inaccurate Info</option>
+            <option>Inappropriate Photos</option>
+            <option>Hours Wrong</option>
+            <option>Permanantly Closed</option>
+            <option>Does Not Exist</option>
+            <option>Other</option>
+          </Select>
+        </div>
+      </div>
+    </div>
+    `,
+    `
+    <div class="col-12 text-left">
+      Description:
+    </div>
+    <div class="col-12">
+      <textarea class="w-100" id="reportBreweryTextArea" placeholder="description here"></textarea>
+    </div>
+    `
+  , 
+  ()=>{
+    submitProfileReport(name, id, document.getElementById('reportBreweryProfile').value, document.getElementById('reportBreweryTextArea').value);
+  }, false)
 }
-function createBreweryBlock(post, location){
+function createHoursPopup(){
+  createPopup("Hours",
+  `
+    <div class="col">
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Monday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.monday_hours}
+        </div>       
+      </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Tuesday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.tuesday_Hours}
+        </div>       
+      </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Wednesday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.wednesday_Hours}
+        </div>       
+      </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Thursday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.thursday_Hours}
+        </div>       
+      </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Friday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.friday_Hours}
+        </div>       
+      </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Saturday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.saturday_Hours}
+        </div>       
+      </div>
+      <div class="row no-gutters justify-content-center">
+        <div class="col-4">
+          Sunday:
+        </div>
+        <div class="col-4">
+          ${currentBrewery.sunday_Hours}
+        </div>       
+      </div>
+      <div class="row">
+      <div class="col text-center my-4">
+        Last Updated: ${currentBrewery.lastUpdated}
+      </div>   
+      </div>
+    </div>
+    `,
+""
+  , 
+  null, false)
+}
+function createSocialImageBlog() {
+    createSocialPostBlocks(socialPosts, socialImagesScroller);
+}
+function createSocialPostsBreweryBlock(post, location){
     var div = document.createElement('div');
     div.setAttribute('class', 'col-4 no-gutters');
     div.setAttribute('id', post.UniqueID);
-    div.innerHTML = document.getElementById('socialCardTemplate').innerHTML;
+    div.innerHTML = document.getElementById('brewerySocialCardTemplate').innerHTML;
 
     // You could optionally even do a little bit of string templating
     var image = ""
@@ -120,13 +300,13 @@ function createBreweryBlock(post, location){
     location.appendChild(div);
 }
 
-function createBlocks(mapList, location){
+function createSocialPostBlocks(mapList, location){
+    location.innerText = "";
     socialPosts.forEach((posts) => {
-        createBreweryBlock(posts, location);
+      createSocialPostsBreweryBlock(posts, location);
     })
     if(socialPosts.length == 0){
         location.innerText = "No user submissions yet! You could be the first!"
         socialImagesWrapper.style.height = '60px';
     }
 }
-loadpage();

@@ -1,38 +1,41 @@
 var searchResults = new Map([]);
-var searchParams;
+//var SEARCH_PARAMS;
 function loadInsearchResults(){
-    searchParams = JSON.parse(sessionStorage.getItem("currentSearch"));
-    console.log(searchParams);
-    if(searchParams.Name){
+    //SEARCH_PARAMS = SEARCH_PARAMS;
+    if(SEARCH_PARAMS == undefined){
+        location.href='#appNavigation/searchNav'
+    }
+    if(SEARCH_PARAMS.Name){
         var request = new XMLHttpRequest()
         // Open a new connection, using the GET request on the URL endpoint
-        request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/brewerySearch/' + searchParams.Name, true)
+        request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/brewerySearch/' + SEARCH_PARAMS.Name, true)
         
         request.onload = function () {
           var data = JSON.parse(this.response)
           console.log(data);
           if (request.status >= 200 && request.status < 400) {
-            searchStatement.innerText = 'Breweries with the phrase: "' + searchParams["Name"] + '"';
+            searchStatement.innerText = 'Breweries with the phrase: "' + SEARCH_PARAMS["Name"] + '"';
             data.forEach((brewery) => {
               searchResults.set(brewery.UniqueID, brewery);
               //Breweries.set(brewery.UniqueID, brewery);
             })
-            createBlocks(searchResults, seachResultsHolder);
+            createSearchBlocks(searchResults, seachResultsHolder);
           } else {
-            searchStatement.innerHTML = '<Strong>Search for "' + searchParams["Name"] + '" failed...</Strong>';
+            searchStatement.innerHTML = '<Strong>Search for "' + SEARCH_PARAMS["Name"] + '" failed...</Strong>';
             console.log('error')
           }
         }
         // Send request
         request.send()
     } else {
-        var radius = searchParams.Radius;
+        var radius = SEARCH_PARAMS.Radius;
         var data = {};
-        if(searchParams['Crawlable'] == true) data['crawlable'] = true;
-        if(searchParams['FamilyFriendly'] == true) data['familyFriendly'] = true;
-        if(searchParams['DogFriendly'] == true) data['dogFriendly'] = true;
-        if(searchParams['InHouseKitchen'] == true) data['inHouseKitchen'] = true;
-        if(searchParams['OutdoorSeating'] == true) data['outdoorSeating'] = true;
+        console.log(SEARCH_PARAMS);
+        if(SEARCH_PARAMS['Crawlable'] == true) data['crawlable'] = true;
+        if(SEARCH_PARAMS['FamilyFriendly'] == true) data['familyFriendly'] = true;
+        if(SEARCH_PARAMS['DogFriendly'] == true) data['dogFriendly'] = true;
+        if(SEARCH_PARAMS['InHouseKitchen'] == true) data['inHouseKitchen'] = true;
+        if(SEARCH_PARAMS['OutdoorSeating'] == true) data['outdoorSeating'] = true;
         var request = new XMLHttpRequest()
         
         // Open a new connection, using the GET request on the URL endpoint
@@ -46,15 +49,15 @@ function loadInsearchResults(){
                 data.foreach(key => {
                     filters += key + ", ";
                 })
-                searchStatement.innerText = "Breweries with the filters: " + filters + " within " + searchParams["Radius"] + " miles";
+                searchStatement.innerText = "Breweries with the filters: " + filters + " within " + SEARCH_PARAMS["Radius"] + " miles";
                 data.forEach((brewery) => {
-                    console.log(searchParams["Location"].lat, searchParams["Location"].lng, brewery.Latitude, brewery.Longitude, radius)
-                    if(calcCrow(searchParams["Location"].lat, searchParams["Location"].lng, brewery.Latitude, brewery.Longitude) <= radius){
+                    console.log(SEARCH_PARAMS["Location"].lat, SEARCH_PARAMS["Location"].lng, brewery.Latitude, brewery.Longitude, radius)
+                    if(calcCrow(SEARCH_PARAMS["Location"].lat, SEARCH_PARAMS["Location"].lng, brewery.Latitude, brewery.Longitude) <= radius){
                         searchResults.set(brewery.UniqueID, brewery);
                     }
                     //Breweries.set(brewery.UniqueID, brewery);
                 })
-                createBlocks(searchResults, seachResultsHolder);
+                createSearchBlocks(searchResults, seachResultsHolder);
             } else {
                 searchStatement.innerHTML = "<Strong>Search failed....</Strong>";
                 console.log('error')
@@ -65,14 +68,15 @@ function loadInsearchResults(){
         request.send(JSON.stringify(data))
     }
 }
-loadInsearchResults();
+//loadInsearchResults();
 function openSearchBrewery(UniqueID){
     var currentBrewery = searchResults.get(Number(UniqueID));
     sessionStorage.setItem("currentBrewery", JSON.stringify(currentBrewery));
     console.log(currentBrewery);
-    window.location.pathname = './breweryProfile.html';
+    //window.location.pathname = './breweryProfile.html';
+    location.href='#openBrewery/'+Number(UniqueID)
   }
-function createBreweryBlock(brewery, location){
+function createSearchBreweryBlock(brewery, location){
     var div = document.createElement('div');
     div.setAttribute('class', 'col-6 no-gutters');
     div.setAttribute('id', brewery.UniqueID);
@@ -86,7 +90,7 @@ function createBreweryBlock(brewery, location){
     } else {
         image = "./assets/images/quenchedwithbg.png";
     }
-    var distance = calcCrow(searchParams["Location"].lat, searchParams["Location"].lng, brewery.Latitude, brewery.Longitude).toFixed(1) + " miles";
+    var distance = calcCrow(SEARCH_PARAMS["Location"].lat, SEARCH_PARAMS["Location"].lng, brewery.Latitude, brewery.Longitude).toFixed(1) + " miles";
     div.innerHTML = div.innerHTML
         .replace(/{Brewery}/g, brewery.Brewery)
         .replace(/{Location}/g, distance)
@@ -97,8 +101,8 @@ function createBreweryBlock(brewery, location){
     location.appendChild(div);
 }
 
-function createBlocks(mapList, location){
+function createSearchBlocks(mapList, location){
     mapList.forEach((brewery,keys) => {
-        createBreweryBlock(brewery, location);
+        createSearchBreweryBlock(brewery, location);
     })
 }

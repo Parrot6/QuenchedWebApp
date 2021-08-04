@@ -15,6 +15,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  overflow-x: hidden;
 }
 
 .standardButton{
@@ -51,6 +52,8 @@ body {
 }
 select {
   width: calc(100%);
+}
+.Filters select {
   text-align-last:center;
   padding-right: 10px;
   border-radius: 8px;
@@ -62,6 +65,12 @@ select {
     background-position: right;
     font-weight: 600;
     font-size: .95rem;
+    @media only screen and (max-width: 500px) {
+      font-size: .8rem;
+    }
+    @media only screen and (max-width: 350px) {
+      font-size: .70rem;
+    }
 }
 option {
   padding-left: 30px;
@@ -405,6 +414,12 @@ select:focus-visible {
   text-align: center;
   color: white;
   font-weight: 600;
+  @media only screen and (max-width: 500px) {
+		font-size: .8rem;
+	}
+  @media only screen and (max-width: 350px) {
+		font-size: .75rem;
+	}
 }
 .filters:not(.active){
   @extend .standardShadow;
@@ -416,12 +431,21 @@ select:focus-visible {
   padding: 1px;
   padding-left: 4px;
   padding-right: 4px;
+  padding-bottom: 2px;
   text-align: center;
   font-size: .95rem;
   margin-left: 4px;
   margin-right: 4px;
   border-radius: 16px;
   font-weight: 600;
+  @media only screen and (max-width: 500px) {
+		font-size: .8rem;
+    margin-left: 2px;
+    margin-right: 2px;
+	}
+  @media only screen and (max-width: 350px) {
+		font-size: .70rem;
+	}
 }
 .filters.active{
   @extend .standardShadow;
@@ -433,12 +457,21 @@ select:focus-visible {
   padding: 1px;
   padding-left: 4px;
   padding-right: 4px;
+  padding-bottom: 2px;
   text-align: center;
   font-size: .95rem;
   margin-left: 4px;
   margin-right: 4px;
   border-radius: 16px;
   font-weight: 600;
+  @media only screen and (max-width: 500px) {
+		font-size: .8rem;
+    margin-left: 2px;
+    margin-right: 2px;
+	}
+  @media only screen and (max-width: 350px) {
+		font-size: .70rem;
+	}
 }
 /****
 SOCIAL PAGE
@@ -509,6 +542,14 @@ SOCIAL CARDS
     object-fit: cover;
     width: 100%;
     height: 100%;
+  }
+  @media only screen and (min-width: 500px)  {
+    height: 70%;
+    >img {
+      object-fit: scale-down;
+      width: unset;
+      height: 100%;
+    }
   }
 }
 .cardHeader {
@@ -601,6 +642,9 @@ SEARCH FRAGMENT
     color: black;
   }
 }
+.breweryProfilePanel {
+  width: 100%;
+}
 .searchNavSelected{
   width: 100%;
   height: 3px;
@@ -640,9 +684,8 @@ SEARCH FRAGMENT
 *********************************/
 #BreweryProfile {
   position: absolute;
-  top: $headerHeight;
   left: 0;
-  height: calc(100% - #{$headerHeight});
+  height: calc(100%);
   width: 100%;
   background-color: $quenchedBG;
   z-index: 9999;
@@ -663,13 +706,15 @@ SEARCH FRAGMENT
 }
 .breweryProfileScrollableContainer {
   height: 100%;
-  overflow: hidden;
+  overflow-y: scroll;
   flex-grow: 1;
   position: relative;
 }
-
+#openBreweryFragment {
+  overflow-y: unset;
+}
 .breweryProfileScrollable{
-  position: absolute;
+  //position: absolute;
   padding-top: 2px;
   top: 0;
   left: 0;
@@ -686,9 +731,8 @@ SEARCH FRAGMENT
   @extend .standardShadow
 }
 #socialImagesWrapper {
-  height: 156px;
+  height: 156px !important;
   overflow: hidden;
-  flex-grow: 1;
   position: relative;
 }
 #socialImagesScroller{
@@ -783,25 +827,124 @@ S E A R C H  R E S U L T S
 LOGIN PANEL
 ***********************************/
 #loginPanel {
-  //display: none;
+  display: block;
   position: absolute;
   background: white;
   border: 3px black ridge;
-  z-index: 999999;
-  top: 5%;
-  left: 5%;
-  width: 90%;
-  height: 90%;
-  border-radius: 16px;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0px;
   font-size: 1rem;
   font-weight: 500;
   input {
     width: 100%;
   }
-  .row {
+  .ten {
     min-height: 10%;
   }
   #startExploring {
-    margin: 20px;
+    position: absolute;
+    bottom: 60;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
   }
+}
+.dropdown-menu{
+  @extend .standardShadow;
+}
+.profileLoggedInPic {
+  height: 100%;
+  object-fit: scale-down;
+}
+//FRAGMENT POPUPS
+.fragmentPopup {
+  z-index: 9000;
+}
+.popopActive {
+  background-color: $quenchedBG;
+  width: 100%;
+  position: relative;
+  flex-grow: 1;
+  margin-bottom: 0;
+  display: flex !important;
+  flex-direction:column;
+  overflow-y: scroll;
+  height: 100%
+}
+.vertical-scrollable> .row {
+  position: absolute;
+  top: 120px;
+  bottom: 100px;
+  left: 180px;
+  width: 50%;
+  overflow-y: scroll; 
+}
+//POPUP TEMPLACE
+.popupTemplateContainer{
+  border-radius: 8px;
+  border: 1px solid black;
+  padding: 10px;
+  @extend .standardShadow;
+  z-index: 99999;
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 10%;
+  right: 10%;
+  background-color: $quenchedBG;
+}
+.popupTitle{
+  font-size: 1.5rem;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  color: $quenchedIconBlue;
+  width: 100%;
+  font-weight: 700;
+  border-bottom: 1px solid black;
+}
+.popupLabel{
+  text-align: right;
+}
+.popupInput{
+  text-align: center;
+}
+.popupCancel{
+  margin-left: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  font-weight: 500;
+}
+.popupConfirm{
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.popupButtons{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+.helpText {
+  font-size: .95rem;
+  line-height: 1.2rem;
+}
+
+.blogPostNotes {
+  font-size: .8rem;
+  line-height: 1rem;
+}
+.blogPostFilter{
+  margin-left: -15px;
+  margin-right: -15px;
+  .filters{
+    font-size: .7rem !important;
+    margin-left: 1px;
+    margin-right: 1px;
+  }
+  
 }

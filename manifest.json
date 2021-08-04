@@ -2,7 +2,7 @@
     "background_color": "blue",
     "description": "Start your next craft brewery adventure",
     "display": "standalone",
-    "orientation": "portrait-primary",
+    "orientation": "portrait",
     "icons": [
       {
         "128" : "quenchedQ128.jpg"

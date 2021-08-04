@@ -12,7 +12,14 @@ function createCard(blog){
         .replace(/{imageUrl}/g, blog.imgurUrl);
     var nameAndLoc = div.getElementsByClassName("socialNameAndLocHolder")[0];
     nameAndLoc.setAttribute('id', blog.UniqueID);
-    nameAndLoc.onclick = function() {openBrewerySocial(this.id)};
+    nameAndLoc.onclick = function() {location.href='#openBrewery/'+this.id};
+    var likes = div.getElementsByClassName('socialLikes')[0];
+    var image = div.getElementsByClassName('socialVoteImage')[0];
+    image.onclick = function(){voteThisSocialPost(blog.id, this, likes)};
+    //console.log(myLiked.has(blog.id))
+    if(myLiked.has(blog.id)){
+      if(myLiked.get(blog.id) == true) image.src = "./assets/images/mugFull.svg";
+    }
     // Write the <div> to the HTML container
     document.getElementById('socialPosts').appendChild(div);
 }
@@ -20,8 +27,13 @@ var posts = [];
 var fetched = false;
 function fetchSocials(){
     if(fetched){
-        return;
+      if(!likesFetched){
+        fetchMyLikedPosts();
+      }
+      return;
     }
+    fetchMyLikedPosts();
+
     var request = new XMLHttpRequest()
     // Open a new connection, using the GET request on the URL endpoint
     request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/posts', true)
@@ -35,11 +47,85 @@ function fetchSocials(){
         drawPosts();
         fetched = true;
       } else {
-        console.log('error')
+        console.log('error');
       }
     }
     // Send request
     request.send()
+}
+var myLiked = new Map([]);
+var likesFetched = false;
+function fetchMyLikedPosts(){
+  if(User == undefined || User['email'] == undefined || likesFetched){
+    return;
+  }
+  var request = new XMLHttpRequest()
+  // Open a new connection, using the GET request on the URL endpoint
+  request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/likes/'+User['email'], true)
+
+  request.onload = function () {
+    var data = JSON.parse(this.response)
+    if (request.status >= 200 && request.status < 400) {
+      likesFetched = true;
+      data.forEach((postInteraction) => {
+        myLiked.set(postInteraction.PostID, Boolean(postInteraction.liked));
+      })
+      if(fetched) drawPosts();
+    } else {
+      console.log('error fetching my likes')
+    }
+  }
+  // Send request
+  request.send()
+}
+function voteThisSocialPost(id, button, likesDisplay){
+  if(myLiked.has(id) && myLiked.get(id) == true){
+    var json = {};
+    json['UserID'] = User['email'];
+    json['PostID'] = id;
+    var request = new XMLHttpRequest();
+    request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/unvote', true);
+    request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+
+    request.onload = function () {
+      // Begin accessing JSON data here
+      //var data = JSON.parse(this.response)
+      if (request.status >= 200 && request.status < 400) {
+
+      } else {
+
+      }
+    }
+  
+    // Send request
+    request.send(JSON.stringify(json));
+    likesDisplay.innerHTML = Number(likesDisplay.innerHTML) - 1;
+    myLiked.set(id, false);
+    button.src = "./assets/images/mugEmpty.svg";
+  } else {
+    var json = {};
+    json['UserID'] = User['email'];
+    json['PostID'] = id;
+    var request = new XMLHttpRequest();
+    request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/like', true);
+    request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+
+    request.onload = function () {
+      // Begin accessing JSON data here
+      //var data = JSON.parse(this.response)
+      if (request.status >= 200 && request.status < 400) {
+
+      } else {
+
+      }
+    }
+  
+    // Send request
+    request.send(JSON.stringify(json))
+    myLiked.set(id, true);
+    likesDisplay.innerHTML = Number(likesDisplay.innerHTML) + 1;
+    button.src = "./assets/images/mugFull.svg";
+  }
 }
 function sortByNew(button){
   toggleSelectedSort(button);
@@ -60,8 +146,10 @@ function sortByLocal(button){
 }
 function sortMyPosts(button){
   toggleSelectedSort(button);
+  var id = User["email"]; 
+  if(id == "" || id == undefined) return; 
   var myposts = posts.filter((post) => {
-    return post.userEmail == "killerparrot6@gmail.com";
+    return post.userEmail == id;
   })
   drawPosts(myposts);
 }

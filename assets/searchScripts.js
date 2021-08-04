@@ -1,5 +1,5 @@
 var Favorites = new Map([]);
-var favsFetched = false;
+var favsUpToDate = false;
 
 function toggleSearchOption(tab){
     document.getElementById("filterSearch").classList.remove("activeSearchNav");
@@ -15,7 +15,7 @@ function toggleSearchOption(tab){
         document.getElementById("searchWithFilterTab").style.display = "block";
         break;
       case "namefilterSearch":
-        loadInFavorites(null);
+        //loadInFavorites(null);
         document.getElementById(tab.id).classList.add("activeSearchNav");
         document.getElementById("namefilterSearchSelected").classList.add("active");
         document.getElementById("searchByNameTab").style.display = "block";
@@ -26,10 +26,11 @@ function toggleSearchOption(tab){
 }
 
 function loadInFavorites(id){
-if(favsFetched){
+if(favsUpToDate || User == undefined){
     return;
 }
-id = "killerparrot6@gmail.com" //@TO-DO remove in production
+id = User["email"]; //@TO-DO remove in production
+if(id == "" || id == undefined) return;
 var request = new XMLHttpRequest()
 // Open a new connection, using the GET request on the URL endpoint
 request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/favorites/'+id, true)
@@ -42,7 +43,7 @@ request.onload = function () {
       Breweries.set(brewery.UniqueID, brewery);
     })
     createBlocks(Favorites, searchListBreweries);
-    favsFetched = true;
+    favsUpToDate = true;
   } else {
     console.log('error')
   }
@@ -65,6 +66,7 @@ function toggleSearchFilter(field, btn){
     }
     filterPins();
   }
+var SEARCH_PARAMS;
 function openSearchByFilter(){
   var params = {};
   params["Crawlable"] = searchCrawable.val;
@@ -74,17 +76,16 @@ function openSearchByFilter(){
   params["OutdoorSeating"] = searchOutdoorSeating.val;
   params["Radius"] = radius;
   params["Location"] = currentUserLoc;
-  console.log(params);
-  sessionStorage.setItem("currentSearch", JSON.stringify(params));
-  var url = './brewerySearch.html';
-  window.location.pathname = url;
+  SEARCH_PARAMS = params;
+  location.href='#search/'+this.id
 }
 function openSearchByName(searchName){
   if(searchName == "" && searchName.length > 1 ) return;
   var params = {};
   params["Name"] = searchName;
   params["Location"] = currentUserLoc;
-  sessionStorage.setItem("currentSearch", JSON.stringify(params));
-  var url = './brewerySearch.html';
-  window.location.pathname = url;
+  //sessionStorage.setItem("currentSearch", JSON.stringify(params));
+  //var url = './brewerySearch.html';
+  SEARCH_PARAMS = params;
+  location.href='#search/'+searchName
 }

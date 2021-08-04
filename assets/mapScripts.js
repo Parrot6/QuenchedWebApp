@@ -253,7 +253,6 @@ function closeMenuAndGoTo(query) {
     } else {
       stateAlreadyLoadedHashMap.set(state, true);
     }
-    console.log(stateAlreadyLoadedHashMap)
     if(stateAlreadyLoadedHashMap.size == 1){
       markers.forEach((element) => {
         element.marker.setMap(null);
@@ -427,29 +426,29 @@ function closeMenuAndGoTo(query) {
         breweryPic.src = breweryJson.Image[0];
       }
       if(breweryJson['Crawable'] == 'TRUE'){
-        infoCra.style.display = "block";
+        infoCraPopup.style.display = "block";
       } else {
-        infoCra.style.display = "none";
+        infoCraPopup.style.display = "none";
       }
       if(breweryJson['Family Friendly'] == 'TRUE'){
-        infoFam.style.display = "block";
+        infoFamPopup.style.display = "block";
       } else {
-        infoFam.style.display = "none";
+        infoFamPopup.style.display = "none";
       }
       if(breweryJson['Dog Friendly'] == 'TRUE'){
-        infoDog.style.display = "block";
+        infoDogPopup.style.display = "block";
       } else {
-        infoDog.style.display = "none";
+        infoDogPopup.style.display = "none";
       }
       if(breweryJson['Outdoor Seating'] == 'TRUE'){
-        infoOut.style.display = "block";
+        infoOutPopup.style.display = "block";
       } else {
-        infoOut.style.display = "none";
+        infoOutPopup.style.display = "none";
       }
       if(breweryJson['In House Kitchen'] == 'TRUE'){
-        infoInH.style.display = "block";
+        infoInHPopup.style.display = "block";
       } else {
-        infoInH.style.display = "none";
+        infoInHPopup.style.display = "none";
       }
       // addressLat.innerText = breweryJson.Latitude;
       // addressLon.innerText = breweryJson.Longitude;

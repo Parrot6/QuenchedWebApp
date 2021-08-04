@@ -2,8 +2,12 @@ function createBreweryBlock(brewery, location){
     var div = document.createElement('div');
     div.setAttribute('class', 'col-6 no-gutters');
     div.setAttribute('id', brewery.UniqueID);
-    div.onclick = function() {openBrewery(this.id)};
+    div.onclick = ()=>{
+        Backbone.history.navigate('#openBrewery/'+brewery.UniqueID, true)
+        location.href='#openBrewery/'+brewery.UniqueID
+    };
     div.innerHTML = document.getElementById('breweryCardTemplate').innerHTML;
+    
 
     // You could optionally even do a little bit of string templating
     var image = ""
@@ -29,6 +33,7 @@ function createBreweryBlock(brewery, location){
 }
 
 function createBlocks(mapList, location){
+    location.innerHTML = "";
     mapList.forEach((brewery,keys) => {
         createBreweryBlock(brewery, location);
     })
