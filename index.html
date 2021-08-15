@@ -12,6 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale = 1.0, 
         maximum-scale=1.0, user-scalable=no" />     
         <meta name="theme-color" content="#51a2e5">
+        <meta http-equiv="ScreenOrientation" content="autoRotate:disabled">
         <meta name="google-signin-scope" content="profile email">
         <meta name="google-signin-client_id" content="996484988122-ijmgp9b4ela8hqupg09ch3l2sknju5sq.apps.googleusercontent.com">
         <script src="https://apis.google.com/js/platform.js" async defer></script>
@@ -49,19 +50,19 @@
                       <span class="material-icons backpageButton">chevron_left</span>
                     </div>
                   <img
-                      src="./assets/images/quenched_logo.png"
+                      src="assets/images/quenched_logo.png"
                       alt="triangle with all three sides equal"
                       height="30px" />
                   </div>
                   
                 </div>
-                <div class="col-1 no-gutters topOptionMenu text-center my-auto">
+                <div class="col-1 no-gutters topOptionMenu text-right my-auto">
                       <a href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <img
-                        src="./assets/images/optionsMenu.svg"
+                        src="assets/images/optionsMenu.svg"
                         alt="triangle with all three sides equal"
                         height="26"
-                        width="100%">
+                        class="mr-1">
                       </a>
                     
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -69,6 +70,7 @@
                         <a class="dropdown-item" href="#about">About</a>
                         <a class="dropdown-item" href="#help">Help</a>
                         <a class="dropdown-item" href="#reportBug">Report Bug</a>
+                        <a class="dropdown-item" href="#options">Options</a>
                       </div>
                 </div>
               <!--------------------------------
@@ -76,7 +78,7 @@
               ---------------------------------->
                 <div id="loginPanel">
                   <div class="col no-gutters">
-                    <div class="row no-gutters justify-content-center"><img src="./assets/images/quenched_logo.png" style="max-width: 90%; height: 50px; margin-top: 30px; margin-bottom: 30px; object-fit: scale-down;"></div>
+                    <div class="row no-gutters justify-content-center"><img src="assets/images/quenched_logo.png" style="max-width: 90%; height: 50px; margin-top: 30px; margin-bottom: 30px; object-fit: scale-down;"></div>
                     <div class="row no-gutters">
                       <div class="col-5 text-right pr-1"><label>Username:</label></div>
                       <div class="col"><input id="userName" type="text"></div>
@@ -143,8 +145,22 @@
                   </div>
                   <button id="startExploring" class="blueStandardButton" onclick="tryStartExploring()">Start Exploring</button>
                 </div>
-
+                <!--------------------------------
+                ###   I M A G E - Z O O M    ####
+                ---------------------------------->
+                <div id="imageClick" style="display: none;">
+                    <!-- <span onclick="closeImage()" style="font-size: 45px; position: absolute; right:0" class="material-icons">
+                      close
+                      </span> -->
+                    <img onclick="closeImage()" style="z-index: 1; height: 45px; width: 45px; position: absolute; right:10; top: 10;" src="assets/images/closeWindow.svg">
+                    <img id="rotateImageButton" onclick="rotateImage()" style="z-index: 1; height: 25px; width: 25px; position: absolute; right:10; top: 55;" src="assets/images/rotateImage.svg">
+                    <img id="rotateImageBackButton" onclick="resetImage()" style="z-index: 1; height: 25px; width: 25px; position: absolute; right:10; top: 55; display:none" src="assets/images/rotateBackImage.svg">
+                    <img id="imageClickImage" src="assets/images/quenchedwithbg.png">
+                </div>
               </div>
+              <script>
+                
+              </script>
               <!--------------------------------
               ######        M A P     ##########
               ---------------------------------->
@@ -197,15 +213,15 @@
                   </div>
                 </div>
                 <!--MAP IS HERE-->
-                <div id="pinInfoContainer">
-                  <div class="row v-100 no-gutters">
-                    <div class="pinInfoCol col-8 no-gutters">
+                <div class="row no-gutters">
+                  <div id="pinInfoContainer" class="col-12 col-md-6 col-lg-4">
+                  <div class="row v-100 no-gutters flex-wrap-reverse">
+                    <div class="pinInfoCol col-8 px-lg-1 pb-lg-1 mx-lg-0 col-lg-12 no-gutters">
                       <div id="UniqueID" style="display: none">1</div>
                       <div id="Brewery" class="row no-gutters">NAME</div>
                       <div id="Address" class="row no-gutters">ADDRESS</div>
                       <div id="AddressExtra" class="row no-gutters">PHONE NUMBER</div>
                       <div id="Website" class="row no-gutters">WEBSITE</div>
-                      <div id="openBrewery" class="row no-gutters"><button onclick="location.href='#openBrewery/'+UniqueID.innerText" class="standardButtonBreweryInfo">OPEN PROFILE</button></div>
                       <div class="pinfInfoFilters row no-gutters">
                         <button id="infoFamPopup" class="filterChoice">Family Friendly</button>
                         <button id="infoDogPopup" class="filterChoice">Dog Friendly</button>
@@ -213,17 +229,18 @@
                         <button id="infoCraPopup" class="filterChoice">Crawlable</button>
                         <button id="infoInHPopup" class="filterChoice">In House Kitchen</button>
                       </div>
+                      <div id="openBrewery" class="row no-gutters"><button onclick="location.href='#openBrewery/'+UniqueID.innerText" class="mr-5 ml-lg-5 standardButtonBreweryInfo">OPEN PROFILE</button></div>
                     </div>
-                    <div class="col no-gutters text-right pinInfoImageContainer">
+                    <div class="col col-lg-12 no-gutters text-right pinInfoImageContainer">
                       <div id="closeInfoContainer" onclick="closeInfoContainer()">
                         <span style="font-size: 30px;" class="material-icons">
                         close
                         </span>
                       </div>
-                      <img id="breweryPic" src="https://www.newrivervalleyva.org/wp-content/uploads/2021/04/040721BreweriesNRVBlog-1030x687.jpg" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}">
+                      <img class="m-lg-0" id="breweryPic" src="https://www.newrivervalleyva.org/wp-content/uploads/2021/04/040721BreweriesNRVBlog-1030x687.jpg" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}">
                     </div>
                   </div>
-
+                </div>
                 </div>
               </div>
               <!--------------------------------
@@ -261,8 +278,10 @@
                     <div class="text-center"><button onclick="openSearchByFilter()" class="blueStandardButton">SEARCH</button></div>
                   </div>
                   <div id="searchByNameTab" class="text-center">
-                    <input type="search" id="searchName" placeholder="Enter Brewery Name">
-                    <div class="text-center"><button style="margin-top: 10px" onclick="openSearchByName(searchName.value)" class="blueStandardButton">SEARCH</button></div>
+                    <div class="searchPanelNameHolder mx-auto"><div class="autocompleteSearch">
+                      <input autocomplete="off" id="myInputSearch" type="text" name="breweryChoice" placeholder="Choose Brewery">
+                    </div></div>
+                    <div class="text-center"><button style="margin-top: 10px" onclick="openSearchByName(myInputSearch.value)" class="blueStandardButton">SEARCH</button></div>
                   </div>
                     <hr class="my-2"/>
                     <div class="text-center favoritesTitle">Favorited Breweries</div>
@@ -286,19 +305,19 @@
                   <div class="row no-gutters">
                     <div class="col-10 no-gutters" style="padding-right: 6px;">
                       <div class="row no-gutters socialButtonHolder" style="justify-content: center;">
-                        <div onclick="sortByNew(this)" class="col text-center socialSortButton activeSort">NEW</div>
+                        <div id="startSocialButton" onclick="sortByNew(this)" class="col text-center socialSortButton activeSort">NEW</div>
                         <div onclick="sortByTop(this)" class="col text-center socialSortButton">TOP</div>
                         <div onclick="sortByLocal(this)" class="col text-center socialSortButton">LOCAL</div>
-                        <div onclick="sortMyPosts(this)" class="col-auto text-center socialSortButton">MY POSTS</div>
+                        <div onclick="sortMyPosts(this)" class="col col-md text-center socialSortButton">MY POSTS</div>
                       </div>
                     </div>
-                    <div onclick="createBlogPopup('Test', ()=>{console.log('confirm')}, 8647)" class="col no-gutters socialButtonMakePost">
+                    <div onclick="createBlogPopup(null)" class="col no-gutters socialButtonMakePost">
                       <i class="material-icons" style="font-size:24px">local_see</i>
                     </div>
                   </div>
 
                   <div id="socialPostsContainer">
-                    <div id="socialPosts" class="">
+                    <div id="socialPosts" class="row no-gutters">
                      
                     </div>
                   </div>
@@ -317,10 +336,10 @@
                       <div class="row no-gutters">
                           <div class="image-slider-wrapper">
                               <div id="image_slider">
-                                  <img class="picSlide activeSlide" src="./assets/images/quenchedwithbg.png" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}">
-                                  <img class="picSlide" src="./assets/images/quenchedwithbg.png" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}">
-                                  <img class="picSlide" src="./assets/images/quenchedwithbg.png" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}">
-                                  <img class="picSlide" src="./assets/images/quenchedwithbg.png" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}">
+                                  <img class="Zoom picSlide activeSlide" src="assets/images/quenchedwithbg.png" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}">
+                                  <img class="Zoom picSlide" src="assets/images/quenchedwithbg.png" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}">
+                                  <img class="Zoom picSlide" src="assets/images/quenchedwithbg.png" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}">
+                                  <img class="Zoom picSlide" src="assets/images/quenchedwithbg.png" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}">
                               </div> 
                               <div class="sliderLeft" onclick="slideChange(-1, this)"><span class="material-icons">chevron_left</span>
                                 </div>
@@ -332,20 +351,20 @@
                         <div class="col">
                           <div class="row no-gutters">
                             <div id="profileBrewery" class="col-9">SAMPLE BREWERY</div>
-                            <div class="col">
+                            <div class="col text-right breweryProfileButtons">
                                 <img
                                 id="favoritesHeart"
                                 onclick="(()=>{
                                   addOrRemoveFavorite(currentBrewery.UniqueID, this);
                                 })()"
-                                src="./assets/images/favorite_plus.svg"
+                                src="assets/images/favorite_plus.svg"
                                 alt="triangle with all three sides equal"
                                 height="24">
                                 <img
                                 onclick="(()=>{
                                   createHoursPopup();
                                 })()"
-                                src="./assets/images/profile_hours.svg"
+                                src="assets/images/profile_hours.svg"
                                 alt="triangle with all three sides equal"
                                 height="24">
                               
@@ -353,32 +372,45 @@
                                 onclick="(()=>{
                                   createReportBreweryPopup(currentBrewery.Brewery, currentBrewery.UniqueID);
                                 })()"
-                                src="./assets/images/reportIcon.svg"
+                                src="assets/images/reportIcon.svg"
                                 alt="triangle with all three sides equal"
                                 height="24">
                             </div>
                           </div>
                           <div id="profileFilterHolder" class="pinfInfoFilters row no-gutters">
-                            <button id="infoFam" class="filterChoice">Family Friendly</button>
-                            <button id="infoDog" class="filterChoice">Dog Friendly</button>
-                            <button id="infoOut" class="filterChoice">Outdoor Seating</button>
-                            <button id="infoCra" class="filterChoice">Crawlable</button>
-                            <button id="infoInH" class="filterChoice">In House Kitchen</button>
+                            <button id="infoFam" class="filterChoice profileFilters">Family Friendly</button>
+                            <button id="infoDog" class="filterChoice profileFilters">Dog Friendly</button>
+                            <button id="infoOut" class="filterChoice profileFilters">Outdoor Seating</button>
+                            <button id="infoCra" class="filterChoice profileFilters">Crawlable</button>
+                            <button id="infoInH" class="filterChoice profileFilters">In House Kitchen</button>
                           </div>
-                          <div class="row no-gutters">Help us learn more about this brewery!</div>
-                          <div class="row no-gutters"><button class="standardButton">RECOMMEND CATAGORIES</button></div>
+                          <div class="recommendCatagories row no-gutters">Help us learn more about this brewery!</div>
+                          <div class="recommendFilters row no-gutters mt-1" style="display: none;">
+                            <div onclick="toggleSuggestionFilter(this)" class="Filters col">Crawlable</div>
+                            <div onclick="toggleSuggestionFilter(this)" class="Filters col">In House Kitchen</div>
+                            <div onclick="toggleSuggestionFilter(this)" class="Filters col">Family Friendly</div>
+                          </div>
+                          <div class="recommendFilters row no-gutters mt-1" style="display: none;">
+                            <div onclick="toggleSuggestionFilter(this)" class="Filters col">Dog Friendly</div>
+                            <div onclick="toggleSuggestionFilter(this)" class="Filters col">Outdoor Seating</div>       
+                          </div>
+                          <div class="recommendFilters row no-gutters justify-content-center my-2" style="display: none;">
+                            <button onclick="submitSuggestions()" class="blueStandardButton">Submit Recommendations</button>     
+                          </div>
+                          <div class="recommendCatagories row no-gutters"><button onclick="showRecommendations()" class="standardButton">RECOMMEND CATAGORIES</button></div>
                         </div>
                       </div>
                       <div class="myhr"></div>
                       <div class="breweryProfileScrollableContainer row no-gutters">
                         <div class="breweryProfileScrollable col no-gutters">
-                          <div id="profileAD" class="row no-gutters">AD AD AD AD AD AD AD AD AD</div>
+                          <div id="profileAD" class="row no-gutters" style="display: none;">AD AD AD AD AD AD AD AD AD</div>
                           <div class="breweryProfilePod row no-gutters">
                             <div class="col">
-                              <div id="profileAddress" class="row no-gutters">123 Sample Address, Christiansburg, VA</div>
+                              <a onclick="mapsSelector()" href="javascript:void(0)" id="profileAddress" class="row no-gutters">123 Sample Address, Christiansburg, VA</a>
                               <div id="profilePhone_Number" class="row no-gutters">(123) 456-7890</div>
                               <div class="row no-gutters">
-                                UBER LYFT
+                                <button class="col-auto uberButton" onclick="uberLink()">Ride Here With Uber</button>
+                                <button class="col-auto lyftButton" onclick="lyftLink()">Get A Lyft</button>
                               </div>
                             </div>
                           </div>
@@ -390,7 +422,7 @@
                             </div>
                           </div>
                           <div class="row no-gutters justify-content-center">
-                            <div class="col-12 text-center"><button class="standardButton">POST BREWERY PHOTO</button></div>
+                            <div class="col-12 text-center"><button onclick="createBlogPopup(currentBrewery.UniqueID)" class="standardButton">POST BREWERY PHOTO</button></div>
                             <div class="col-12 text-center">Top user photos for this Brewery!</div>
                           </div>
                           <div id="socialImagesWrapper" class="breweryProfilePod row no-gutters">
@@ -404,10 +436,10 @@
                   </div>
                 </div>
               </div>
-                <!--BREWERY CARD-->
+                <!--SOCIAL BREWERY CARD-->
                   <script id="brewerySocialCardTemplate" type="text/html">
                     <div class="socialCardFrame">
-                    <div class="socialCardImage"><img src="{imageUrl}" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}"/></div>
+                    <div class="socialCardImage"><img class="Zoom" src="" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}"/></div>
                   </div>
                   </script>
               
@@ -420,7 +452,7 @@
                     <div class="col no-gutters" style="display: flex;
                     flex-direction: column;
                     height: 100%;">
-                    <div id="searchStatement" class="row text-center no-gutters" style="display: inline-block; line-height: 1.2rem;">Search results for Name</div>
+                    <div id="searchStatement" class="row text-center no-gutters" style="display: inline-block; line-height: 1.2rem;">Loading search results....</div>
                     <div class="breweryProfileScrollableContainer row no-gutters">
                         <div class="breweryProfileScrollable col no-gutters">
                           <div id="seachResultsHolder" class="mapBreweryRow row no-gutters">
@@ -454,6 +486,7 @@
         <div id="popupFrame"></div>
         <script id="popupTemplate" type="text/html">
           <div class="row popupTemplateContainer">
+            <button id="closePopupButton" class="popupCancel">X</button>
             <div class="col">
               <div class="popupTitle text-center">{Title}</div>
               <div class="row">
@@ -473,9 +506,10 @@
         <div id="popupMakeBlogFrame"></div>
         <script id="makeBlogPostTemplate" type="text/html">
           <div class="row popupTemplateContainer">
+            <button id="closePopupButton" class="popupCancel">X</button>
             <div class="col">
               <div class="popupTitle text-center">{Title}</div>
-              <div class="row blogPostNotes mb-2">
+              <div class="rowblogPostNotes mb-2">
                 Select all tags that apply to this brewery.
               </div>
               <div class="row filterRow first no-gutters blogPostFilter">
@@ -491,18 +525,18 @@
                 Private comment, only visible to this brewery owner. (optional)
               </div>
               <div class="row">
-                <input class="w-100" id="makeBlogPostComment" placeholder="comment got owners">
+                <input class="w-100" id="makeBlogPostComment" placeholder="Comment">
               </div>
               <!-- <div class="row">
                 <button class="standardButton w-100 my-2">TAKE PHOTO</button>
               </div> -->
               <div class="row">
-                <input id="Image1" class="py-1 mt-2 ImageUpload standardButton w-100 mb-2" type="file" accept="image/*" data-max-size="5000" />
+                <input id="Image1" class="py-1 mt-2 ImageUpload standardButton w-100 mb-2" type="file" data-buttonText="Choose Image" accept="image/*" data-max-size="5000" />
               </div>
               <div class="row">
-                <img class="w-100 text-center my-1" style="background: gray;" id="makeBlogPostImage" src="null">
+                <img  class="w-100 text-center my-1" style="background: gray;" id="makeBlogPostImage" src="">
               </div>
-              <div class="row text-center blogPostNotes">
+              <div class="row mx-auto blogPostNotes">
                 *Image submitted anonymously to Imgur*
               </div>
               <div class="row popupButtons">
@@ -517,21 +551,30 @@
           <div class="cardHeader">
             <div class="row no-gutters">
               <div class="col">{User}</div>
-              <div class="col-1 text-center"><img
-                src="./assets/images/socialTripleDot.svg"
+              <div class="col-1 text-right mr-2">
+              <a href="#" role="button" id="dropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">    
+                <img
+                src="assets/images/socialTripleDot.svg"
                 alt="like this image"
                 height="25"
-                width="20" /></div>
+                width="20" /></a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" onclick="(()=>{socialShareImage(this.parentNode.id)})()">Share</a>
+                  <a class="socialDeleteButton dropdown-item" onclick="(()=>{socialDelete(this.parentNode.id, this)})()">Delete</a>
+                  <a class="dropdown-item" onclick="(()=>{socialSaveImage(this.parentNode.id)})()">Save Image</a>
+                  <a class="dropdown-item" onclick="(()=>{createReportBlogPopup(this.parentNode.id)})()">Report</a>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="cardImage"><img src="{imageUrl}" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}"/></div>
+          <div class="cardImage"><img class="Zoom" src="" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}"/></div>
           <div class="cardFooter">
             <div class="row no-gutters">
-              <div class="socialLikes col-1 no-gutters my-auto text-center">{Likes}</div>
-              <div class="col-1 no-gutters my-auto">
+              <div class="socialLikes col-1 mx-lg-4 col-lg-auto no-gutters my-auto text-center">{Likes}</div>
+              <div class="col-1 mr-lg-4 col-lg-auto no-gutters my-auto">
                 <img
                 class="socialVoteImage"
-                src="./assets/images/mugEmpty.svg"
+                src="assets/images/mugEmpty.svg"
                 alt="like this image"
                 height="30"
                 width="30" />
@@ -539,8 +582,8 @@
               <div class="socialNameAndLocHolder col no-gutters">
                 <div class="socialBreweryName row no-gutters">{Brewery}</div>
                 <div class="socialBreweryLocation row no-gutters">{Location}</div>
+                <div class="socialBreweryDistance row no-gutters float-right">15 miles</div>
               </div>
-              <div class="col-1 no-gutters"></div>
             </div>
           </div>
         </script>
@@ -548,7 +591,7 @@
         <script id="breweryCardTemplate" type="text/html">
           <div class="breweryCardFrame">
           <div class="breweryCardHeader">
-          <div class="breweryCardImage"><img src="{imageUrl}" onerror="if(this.src != './assets/images/quenchedwithbg.png'){this.src='./assets/images/quenchedwithbg.png'}"/></div>
+          <div class="breweryCardImage"><img src="" onerror="if(this.src != 'assets/images/quenchedwithbg.png'){this.src='assets/images/quenchedwithbg.png'}"/></div>
           <div class="breweryCardFooter">
             <div class="row no-gutters">
               <div class="col no-gutters">

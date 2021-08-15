@@ -13,7 +13,7 @@ $defaultMargin: 6px;
 $headerHeight: 40px;
 html,
 body {
-  height: 100%;
+  height: 100vh;
   margin: 0;
   overflow-x: hidden;
 }
@@ -266,6 +266,16 @@ select:focus-visible {
   border-radius: 16px;
   @extend .standardShadow; 
 }
+#closePopupButton {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border-radius: 20px;
+  height: 30px;
+  width: 30px;
+  font-weight: 500;
+  z-index: 1;
+}
 .standardButtonBreweryInfo {
   @extend .standardButton;
   margin: 2px;
@@ -297,7 +307,15 @@ select:focus-visible {
   margin-top: 4px;
   margin-right: 4px;
   margin-bottom: 4px;
-  @extend .standardShadow; 
+  object-fit: cover;
+  @extend .standardShadow;
+  @media only screen and (min-width: 992px)  {
+    max-width: calc(100%);
+    width: 100%;
+    height: 350px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
 }
 #Address {
   display: inline-block;
@@ -485,6 +503,8 @@ SOCIAL PAGE
   position: absolute;
   margin-top: 4px;
   padding-top: 2px;
+  padding-left: 6px;
+  padding-right: 6px;
   top: 0;
   left: 0;
   right: 0;
@@ -510,6 +530,14 @@ SOCIAL PAGE
   overflow: hidden;
   margin-left: $defaultMargin;
   margin-right: $defaultMargin;
+  @media only screen and (max-width: 460px) {
+		font-size: .85rem;
+    line-height: 1.5rem;
+	}
+  @media only screen and (max-width: 380px) {
+		font-size: .7rem;
+    line-height: 1.5rem;
+	}
 }
 .socialButtonMakePost{
   @extend .standardShadow;
@@ -531,24 +559,26 @@ SOCIAL CARDS
   @extend .standardShadow;
   margin: $defaultMargin;
   margin-top: 0px;
-  flex: 0;
+  margin-left: 0px;
+  margin-right: 0px;
   background-color: white;
   border-radius: 8px;
 }
 .cardImage {
   height: 340px;
-  overflow: hidden;
+  overflow-x: hidden;
   >img {
     object-fit: cover;
     width: 100%;
     height: 100%;
   }
   @media only screen and (min-width: 500px)  {
-    height: 70%;
+    height: fit-content;
+    //@at-root: 90%;
     >img {
-      object-fit: scale-down;
-      width: unset;
-      height: 100%;
+      object-fit: contain;
+      // width: 100%;
+      height: initial;
     }
   }
 }
@@ -574,6 +604,13 @@ SOCIAL CARDS
   font-weight: 400;
   line-height: 1rem;
 }
+.socialBreweryDistance {
+  font-size: .75rem;
+  font-weight: 400;
+  line-height: .6rem;
+  padding-bottom: 2px;
+  padding-right: 2px;
+}
 /*****************************
 BREWERY CARDS
 ***************************/
@@ -597,6 +634,9 @@ BREWERY CARDS
     object-fit: cover;
     width: 100%;
     height: 100%;
+  }
+  @media only screen and (min-width: 500px)  {
+    height: 320px;
   }
 }
 .breweryCardFooter {
@@ -698,6 +738,12 @@ SEARCH FRAGMENT
   width: 70%;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media only screen and (min-width: 500px)  {
+    font-size: 1.2rem;
+  }
+  @media only screen and (min-width: 800px)  {
+    font-size: 1.4rem;
+  }
 }
 #profileAD {
   background-color: white;
@@ -731,21 +777,11 @@ SEARCH FRAGMENT
   @extend .standardShadow
 }
 #socialImagesWrapper {
-  height: 156px !important;
   overflow: hidden;
   position: relative;
 }
-#socialImagesScroller{
-  position: absolute;
-  padding-top: 2px;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin-left: 2px;
-  padding-left:6px;
-  margin-bottom: 2px;
-  overflow: auto;
+#socialImagesScroller {
+  margin-right: -6px;
 }
 .socialCardFrame {
   @extend .standardShadow;
@@ -753,6 +789,7 @@ SEARCH FRAGMENT
   margin-top: 0px;
   margin: 6px;
   margin-left: 0px;
+  margin-bottom: 0px;
   background-color: white;
   border-radius: 8px;
 }
@@ -763,6 +800,9 @@ SEARCH FRAGMENT
     object-fit: cover;
     width: 100%;
     height: 100%;
+  }
+  @media only screen and (min-width: 800px)  {
+    height: 250px !important;
   }
 }
 .myhr{
@@ -792,10 +832,6 @@ SEARCH FRAGMENT
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 8px 0px 0px 8px;
 }
-// .sliderLeft:hover, .sliderRight:hover {
-//   background-color: rgba(0, 0, 0, 0.3);
-//   color: white;
-// }
 #image_slider {
   height: 200px;
   overflow: hidden;
@@ -805,8 +841,38 @@ SEARCH FRAGMENT
     width: 100%;
     height: 100%;
   }
+  @media only screen and (min-width: 500px)  {
+    height: 500px;
+    width: 100%;
+    >img {
+      object-fit: contain;
+    }
+  }
   .activeSlide {
     display: block !important;
+  }
+}
+.profileFilters {
+  @media only screen and (min-width: 650px)  {
+    font-size: .9rem !important;
+    padding-bottom: 2px !important;
+    width: 20%
+  }
+}
+.breweryProfileButtons{
+  @media only screen and (min-width: 500px)  {
+    >img {
+      margin-top: 2px;
+      margin-left: 5px;
+      height: 30px;
+    }
+  }
+  @media only screen and (min-width: 700px)  {
+    >img {
+      margin-top: 4px;
+      margin-left: 12px;
+      height: 40px;
+    }
   }
 }
 .backpageButton {
@@ -816,11 +882,50 @@ SEARCH FRAGMENT
   font-size: 45px !important;
   left: -7;
 }
+.lyftButton {
+  background-color: purple;
+  color: white;
+  padding: 5px 10px !important;
+  margin-top: 5px;
+  margin-left: 5px;
+  border-radius: 10px;
+  border: unset;
+}
+.uberButton {
+  margin-top: 5px;
+  background-color: black;
+  color: white;
+  padding: 5px 10px !important;
+  border-radius: 10px;
+  border: unset;
+}
 /***********************************
 S E A R C H  R E S U L T S
 ***********************************/
 #seachResultsHolder {
   padding-left: 6px;
+}
+/***********************************
+IMAGE PANEL
+***********************************/
+
+#imageClick {
+  display: block;
+  position: absolute;
+  background: rgb(31, 31, 31);
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  img {
+    width: 100vw;
+    height: 100vh;
+    padding: 0;
+    display: block;
+    margin: 0 auto;
+    object-fit: contain;
+  }
 }
 
 /***********************************
@@ -860,6 +965,10 @@ LOGIN PANEL
   height: 100%;
   object-fit: scale-down;
 }
+.errorText {
+  font-size: .75rem;
+  color: red;
+}
 //FRAGMENT POPUPS
 .fragmentPopup {
   z-index: 9000;
@@ -883,7 +992,7 @@ LOGIN PANEL
   width: 50%;
   overflow-y: scroll; 
 }
-//POPUP TEMPLACE
+//POPUP TEMPLATE
 .popupTemplateContainer{
   border-radius: 8px;
   border: 1px solid black;
@@ -896,13 +1005,30 @@ LOGIN PANEL
   left: 10%;
   right: 10%;
   background-color: $quenchedBG;
+  @media only screen and (min-width: 600px)  {
+    top: 20%;
+    bottom: 20%;
+    left: 20%;
+    right: 20%;
+  }
+  @media only screen and (min-width: 1000px)  {
+    top: 20%;
+    bottom: 20%;
+    left: 30%;
+    right: 30%;
+  }
+  @media only screen and (min-width: 1200px)  {
+    top: 20%;
+    bottom: 20%;
+    left: 35%;
+    right: 35%;
+  }
 }
 .popupTitle{
   font-size: 1.5rem;
   padding-bottom: 5px;
   margin-bottom: 10px;
   color: $quenchedIconBlue;
-  width: 100%;
   font-weight: 700;
   border-bottom: 1px solid black;
 }
@@ -947,4 +1073,56 @@ LOGIN PANEL
     margin-right: 1px;
   }
   
+}
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
+}
+.autocompleteSearch {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+#myInputSearch {
+  width: 100%;
+}
+.searchPanelNameHolder {
+  width: 80%;
+  color: $quenchedIconBlue;
+  font-weight: 400;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+#makeBlogPostImage {
+  max-height: 200px;
+  object-fit: scale-down;
+}
+.autocomplete-items div {
+  font-size: 1rem;
+  font-weight: 400;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #fff; 
+  border-bottom: 1px solid #d4d4d4; 
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9; 
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
 }

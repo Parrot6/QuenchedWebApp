@@ -20,7 +20,6 @@ function loadpage(currentBrewery){
     //profileWebSite.innerText = currentBrewery.WebSite || "No Website";
     profileFacebook.innerText = currentBrewery.Facebook || "No Facebook";
     profileInstagram.innerText = currentBrewery.Instagram || "No Instagram";
-    console.log(currentBrewery);
     var numfilters = 0;
     if(currentBrewery['Crawable'] == 'TRUE'){
         infoCra.style.display = "block";
@@ -55,19 +54,44 @@ function loadpage(currentBrewery){
       if(numfilters == 0){
         profileFilterHolder.style.display = "none";
       }
+      if(currentBrewery.Verified){
+        $('.recommendCatagories').hide();
+      } else {
+        $('.recommendCatagories').show();
+      }
       var images = currentBrewery.Image || [];
-      var i = 0;
+      console.log('images', images);
       var slides = document.getElementsByClassName('picSlide');
       for(var i = slides.length-1; i >= 0; i--){
+        slides[i].src = "assets/images/quenchedwithbg.png";
         if(i > images.length - 1 && slides.length > 1){
           slides[i].remove();
-        } else {
+        } else if(images.length > 0) {
+          console.log(images[i], i);
           slides[i].src = images[i];
         }
       }
     setFavoriteHeartState(currentBrewery.UniqueID);
     loadSocialImages();
 }
+function showRecommendations(){
+  $('.recommendCatagories').hide();
+  $('.recommendFilters').show();
+}
+function submitSuggestions(){
+  submitRecommendations(currentBrewery.UniqueID, activeSuggestions);
+  $('.recommendFilters').hide();
+}
+var activeSuggestions = {};
+function toggleSuggestionFilter(btn){
+    if(!btn.classList.contains('active')){
+      activeSuggestions[btn.innerText] = true;
+      btn.classList.add('active');
+    } else {
+      activeSuggestions[btn.innerText] = false;
+      btn.classList.remove('active');
+    }
+  }
 function setFavoriteHeartState(uniqueID){
   if(Favorites.has(uniqueID)){
     favoritesHeart.src = "./assets/images/favorite_plusRed.svg";
@@ -278,11 +302,12 @@ function createHoursPopup(){
 }
 function createSocialImageBlog() {
     createSocialPostBlocks(socialPosts, socialImagesScroller);
+    makeImagesZoomable();
 }
 function createSocialPostsBreweryBlock(post, location){
     var div = document.createElement('div');
     div.setAttribute('class', 'col-4 no-gutters');
-    div.setAttribute('id', post.UniqueID);
+    div.setAttribute('id', post.id);
     div.innerHTML = document.getElementById('brewerySocialCardTemplate').innerHTML;
 
     // You could optionally even do a little bit of string templating
@@ -293,7 +318,7 @@ function createSocialPostsBreweryBlock(post, location){
         image = "/assets/images/quenchedwithbg.png";
     }
     div.innerHTML = div.innerHTML
-        .replace(/{imageUrl}/g, image);
+        .replace(/src=""/g, 'src="' + image + '"');
 
     // Write the <div> to the HTML container
     //console.log(brewery);
@@ -307,6 +332,10 @@ function createSocialPostBlocks(mapList, location){
     })
     if(socialPosts.length == 0){
         location.innerText = "No user submissions yet! You could be the first!"
-        socialImagesWrapper.style.height = '60px';
+        //socialImagesWrapper.style.height = '60px';
+        socialImagesWrapper.classList.add('justify-content-center');
     }
+}
+function mapsSelector() {
+    window.open("https://www.google.com/maps/dir/?api=1&destination="+currentBrewery.Latitude+","+currentBrewery.Longitude+"&dir_action=navigate");
 }

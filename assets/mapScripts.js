@@ -522,16 +522,16 @@ function closeMenuAndGoTo(query) {
       updateLocationRadiusText(area, state);
   }
   function uberLink(){
-    const lat = addressLat.innerText;
-    const lon = addressLon.innerText
-    var res = encodeURI(Brewery.innerText);
-    var link = "https://m.uber.com/ul/?action=setPickup&client_id=rC3LeSNyncKuWq8O89OUCBdoUQWOo_SO&pickup=my_location&dropoff[nickname]=Brewery&dropoff[latitude]="+lat+"&dropoff[longitude]="+ lon;
-        window.open(
+    const lat = currentBrewery.Latitude;
+    const lon = currentBrewery.Longitude;
+    var link = "https://m.uber.com/ul/?client_id=rC3LeSNyncKuWq8O89OUCBdoUQWOo_SO&action=setPickup&dropoff[formatted_address]=" + currentBrewery.address + "&pickup=my_location&dropoff[latitude]="+lat+"&dropoff[longitude]="+ lon;
+    console.log(link)
+    window.open(
       link, "_blank");
   }
   function lyftLink(){
-    const lat = addressLat.innerText;
-    const lon = addressLon.innerText
+    const lat = currentBrewery.Latitude;
+    const lon = currentBrewery.Longitude;
     var res = encodeURI(Brewery.innerText);
     var link = "https://lyft.com/ride?id=lyft&pickup[latitude]=null8&pickup[longitude]=null&partner=...&destination[latitude]="+lat+"&destination[longitude]="+lon;
 

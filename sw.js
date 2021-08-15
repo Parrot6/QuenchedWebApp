@@ -11,7 +11,8 @@ const assets = [
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://code.jquery.com/jquery-3.2.1.slim.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js',
-  'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/breweries',
+  //'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/breweries',
+  //'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/breweryNames'
   //'https://maps.googleapis.com/maps/api/js?key=AIzaSyACqFLMX07OSsE_OPdmoyyxDXKdOVt7QJ4&callback=myMap'
 ];
 
@@ -32,17 +33,70 @@ self.addEventListener('activate', (e) => {
   )
 })
 
-self.addEventListener('fetch', (e) => {
-    //console.log('fetch', e);
-    e.respondWith(
-      caches.match(e.request).then((response) => response || fetch(e.request).then(fetchRes => {
-        return caches.open(dynamicCache).then(cache => {
-          if(fetchRes.status == 200){
-             cache.put(e.request.url, fetchRes.clone());
-          }
-          return fetchRes;
-        })
+self.addEventListener('fetch', (event) => {
+  let request = event.request;
+  if (request.url.includes('mb1zattts4') && request.method != "POST") {
+    event.respondWith(
+      caches.match(request).then(function (response) {
+  
+        // If there's a cached API and it's still valid, use it
+        if (isValid(response)) {
+          return response;
+        }
+  
+        // Otherwise, make a fresh API call
+        return fetch(request).then(function (response) {
+  
+          // Cache for offline access
+          var copy = response.clone();
+          event.waitUntil(caches.open(dynamicCache).then(function (cache) {
+            var headers = new Headers(copy.headers);
+            headers.append('sw-fetched-on', new Date().getTime());
+            return copy.blob().then(function (body) {
+              return cache.put(request, new Response(body, {
+                status: copy.status,
+                statusText: copy.statusText,
+                headers: headers
+              }));
+            });
+          }));
+  
+          // Return the requested file
+          return response;
+  
+        }).catch(function (error) {
+          return caches.match(request).then(function (response) {
+            return response || fetch(event.request).then(function(response) {
+              cache.put(event.request, response.clone());
+              return response;
+            });
+          });
+        });
       })
-      )
-      );
-});
+    );
+  } else {
+    event.respondWith(
+        caches.open(dynamicCache).then(function(cache) {
+          return cache.match(event.request).then(function (response) {
+            return response || fetch(event.request).then(function(response) {
+              if(response.status == 200 && event.request.method != "POST"){
+              cache.put(event.request, response.clone());
+              }
+              return response;
+            });
+          });
+        })
+    );
+  }
+})
+/**
+ * Check if cached API data is still valid
+ * @param  {Object}  response The response object
+ * @return {Boolean}          If true, cached data is valid
+ */
+ var isValid = function (response) {
+	if (!response) return false;
+	var fetched = response.headers.get('sw-fetched-on');
+	if (fetched && (parseFloat(fetched) + (1000 * 60 * 60 * 72)) > new Date().getTime()) return true;
+	return false;
+};

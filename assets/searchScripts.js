@@ -25,11 +25,12 @@ function toggleSearchOption(tab){
     }
 }
 
-function loadInFavorites(id){
+function loadInFavorites(){
+  console.log("loadinFavs");
 if(favsUpToDate || User == undefined){
     return;
 }
-id = User["email"]; //@TO-DO remove in production
+id = User["email"];
 if(id == "" || id == undefined) return;
 var request = new XMLHttpRequest()
 // Open a new connection, using the GET request on the URL endpoint
@@ -37,6 +38,7 @@ request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/
 
 request.onload = function () {
   var data = JSON.parse(this.response)
+  console.log(data);
   if (request.status >= 200 && request.status < 400) {
     data.forEach((brewery) => {
       Favorites.set(brewery.UniqueID, brewery);
@@ -80,6 +82,10 @@ function openSearchByFilter(){
   location.href='#search/'+this.id
 }
 function openSearchByName(searchName){
+  if(BreweryNamesList.has(searchName)){
+    location.href='#openBrewery/' + BreweryNamesList.get(searchName).UniqueID;
+    return;
+  }
   if(searchName == "" && searchName.length > 1 ) return;
   var params = {};
   params["Name"] = searchName;

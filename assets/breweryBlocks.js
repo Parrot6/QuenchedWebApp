@@ -25,7 +25,7 @@ function createBreweryBlock(brewery, location){
     div.innerHTML = div.innerHTML
         .replace(/{Brewery}/g, brewery.Brewery)
         .replace(/{Location}/g, distance)
-        .replace(/{imageUrl}/g, image);
+        .replace(/src=""/g, 'src="' + image + '"');
 
     // Write the <div> to the HTML container
     //console.log(brewery);

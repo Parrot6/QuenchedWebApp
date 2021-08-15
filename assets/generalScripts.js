@@ -13,6 +13,7 @@ function resetFragments(){
 }
 var Router = Backbone.Router.extend({
   routes: {//List of URL routes with the corresponding function name which will get called when user will visit a page having URL containing this route
+      "" : "landing",
       "openBrewery/:id": "openBrewery",    // localhost:8080/#list
       "search/:id": "search",
       "other": "other",
@@ -21,18 +22,23 @@ var Router = Backbone.Router.extend({
       "help": "help",
       "favorite/:id": "favorite",
       "reportBug": "reportBug",
-      "deadroute": "deadroute"
+      "deadroute": "deadroute",
+      "options": "options"
+  },
+  landing: function(){
+    location.href='#appNavigation/mapNav';
   },
   openBrewery: function(id) {
-    console.log("routeropen");
       loadInFavorites();
       resetFragments();
+      document.getElementById('dropdownMenuLink').style.display = "none";
       backButton.style.display = "block";
       document.getElementById('openBreweryFragment').classList.add("popopActive");
       openBrewerySocial(id);
   },
   search: function(id) {
     resetFragments();
+    document.getElementById('dropdownMenuLink').style.display = "none";
     backButton.style.display = "block";
     document.getElementById('openSearchFragment').classList.add("popopActive");
     loadInsearchResults();
@@ -54,6 +60,16 @@ var Router = Backbone.Router.extend({
       </div>`
       , 
       null)
+  },
+  options: function(){
+    createPopup("Options", "",
+    `
+      <div>
+        <b>Delete All Cache And Reload App</b><button id="deleteCache" onclick="deleteCache()">Delete Cache</button>
+      </div>
+      `
+    , 
+    null)
   },
   help: function(){
     createPopup("Help", "",
@@ -112,14 +128,12 @@ var Router = Backbone.Router.extend({
       submitBugReport(document.getElementById('reportBugSelect').value, document.getElementById('reportBugTextArea').value);
     })
   },
-  favorite: function(id){
-    addOrRemoveFavorite(id);
-  },
   appNavigation: function(tab){
     resetFragments();
     // document.getElementById("mapFragment").classList.remove("activeFrag");
     // document.getElementById("searchFragment").classList.remove("activeFrag");
     // document.getElementById("socialFragment").classList.remove("activeFrag");
+    document.getElementById('dropdownMenuLink').style.display = "block";
     document.getElementById("mapNav").classList.remove("activeNav");
     document.getElementById("searchNav").classList.remove("activeNav");
     document.getElementById("socialNav").classList.remove("activeNav");
@@ -154,8 +168,13 @@ jQuery(document).ready(function() {
   var router = new Router();
   // And tell Backbone to start routing
   Backbone.history.start();
+  getBreweryNames();
 });
-
+function deleteCache(){
+  console.log("attempting hard reload");
+    caches.keys().then((keyList) => Promise.all(keyList.map((key) => caches.delete(key))))
+    window.location.reload(true);
+}
 function calcCrow(lat1, lon1, lat2, lon2) 
 {
   var R = 6371; // km
@@ -205,6 +224,31 @@ function loadBrewery(UniqueID){
     if (request.status >= 200 && request.status < 400) {
       Breweries.set(data.UniqueID, data);
       return data;
+    } else {
+      return false;
+    }
+  }
+
+  // Send request
+  request.send()
+}
+var BreweryNamesList = new Map([]);
+var BreweryNames = [];
+function getBreweryNames(){
+  var request = new XMLHttpRequest()
+  // Open a new connection, using the GET request on the URL endpoint
+  request.open('GET', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/breweryNames', true)
+
+  request.onload = function () {
+    // Begin accessing JSON data here
+    var data = JSON.parse(this.response)
+    if (request.status >= 200 && request.status < 400) {
+      for (var i = 0; i < data.length; i++){
+        var obj = data[i];
+        BreweryNamesList.set(obj.Brewery, obj);
+        BreweryNames.push(obj.Brewery);
+      }
+      autocomplete(document.getElementById("myInputSearch"), BreweryNames);
     } else {
       return false;
     }
@@ -308,8 +352,13 @@ function onSignIn(googleUser) {
       //console.log(this.response);
       User = json;
       User["loggedIn"] = true;
+      console.log(User, favsUpToDate)
       loadInFavorites();
-      Backbone.history.loadUrl(Backbone.history.fragment);
+      console.log(Backbone.history.fragment)
+      if(Backbone.history.fragment.includes('Backbone.history.fragment')){
+         Backbone.history.loadUrl(Backbone.history.fragment);
+      }
+     
       return true;
     } else {
       return false;
@@ -333,28 +382,39 @@ function createPopup(title, rowOneInnerHtml, rowTwoInnerHtml, confirmFunction, k
   confirm.onclick = function() {
     confirmFunction()
     div.style.display = "none";
-    Backbone.history.navigate("#deadroute");
+    //Backbone.history.navigate("#deadroute");
   };
   if(confirmFunction == null) confirm.style.display = "none";
-  var cancel = div.getElementsByClassName("popupCancel")[0];
-  cancel.onclick = function() {
+  $(".popupCancel").on('click', function(event){
     div.style.display = "none";
-    if(killNavigation) Backbone.history.navigate("#deadroute");
-  };
+    //if(killNavigation) Backbone.history.navigate("#deadroute");
+  });
+
 }
 var makeBlogPostBrewery = null;
 var activeRecommendations = {};
 function toggleMakePostFilter(btn){
-    if(!btn.classList.contains('active')){
-      activeRecommendations[btn.innerText] = true;
-      btn.classList.add('active');
-    } else {
-      activeRecommendations[btn.innerText] = false;
-      btn.classList.remove('active');
-    }
+  if(!btn.classList.contains('active')){
+    activeRecommendations[btn.innerText] = true;
+    btn.classList.add('active');
+  } else {
+    activeRecommendations[btn.innerText] = false;
+    btn.classList.remove('active');
   }
-function createBlogPopup(title, confirmFunction, breweryID = null){
-  if(breweryID !== null) makeBlogPostBrewery = Breweries.get(breweryID);
+};
+
+function createBlogPopup(breweryID = null){
+  var inputBrewery;
+  if(breweryID !== null){
+    makeBlogPostBrewery = Breweries.get(breweryID);
+    inputBrewery = makeBlogPostBrewery.Brewery;
+  } else {
+    inputBrewery = `
+                      <div class="autocomplete">
+                        <input autocomplete="off" id="myInput" type="text" name="breweryChoice" placeholder="Choose Brewery">
+                      </div>
+                    `;
+  }
   activeRecommendations = {};
   var div = document.getElementById('popupMakeBlogFrame');
   div.style.display = "block";
@@ -362,10 +422,29 @@ function createBlogPopup(title, confirmFunction, breweryID = null){
   div.innerHTML = document.getElementById('makeBlogPostTemplate').innerHTML;
   // You could optionally even do a little bit of string templating
   div.innerHTML = div.innerHTML 
-      .replace(/{Title}/g, makeBlogPostBrewery.Brewery);
+      .replace(/{Title}/g, inputBrewery);
+  if(breweryID == null){
+    autocomplete(document.getElementById("myInput"), BreweryNames);
+  }
   var ImageInput = div.getElementsByClassName('ImageUpload')[0];
+  $(ImageInput).change( function(event) {
+    var tmppath = URL.createObjectURL(event.target.files[0]);
+    $("#makeBlogPostImage").attr('src',tmppath);
+  });
   var confirm = div.getElementsByClassName("popupConfirm")[0];
   confirm.onclick = function() {
+    $('.errorText').remove();
+    $('#myInput').css('border', '1px solid black');
+    $('#Image1').css('border', '1px solid black');
+    if(breweryID == null){
+      if(BreweryNamesList.has(myInput.value)){
+        makeBlogPostBrewery = BreweryNamesList.get(myInput.value)
+      } else {
+        $('#myInput').css('border', '1px solid red');
+        $('#myInput').after('<div class="errorText">You must choose an brewery from the list</div>');
+        return;
+      }
+    }
     if(makeBlogPostBrewery == null){
       alert("No brewery selected")
       return;
@@ -450,21 +529,26 @@ function createBlogPopup(title, confirmFunction, breweryID = null){
             console.log("Done | 成功");
         });
     } else {
-        alert("No image selected")
+      $('#Image1').after('<div class="errorText">You must select an image</div>');
+      $('#Image1').css('border', '1px solid red');
         return;
     }
     div.style.display = "none";
   };
-  if(confirmFunction == null) confirm.style.display = "none";
-  var cancel = div.getElementsByClassName("popupCancel")[0];
-  cancel.onclick = function() {
+  $(".popupCancel").on('click', function(event){
     div.style.display = "none";
-  };
+    //if(killNavigation) Backbone.history.navigate("#deadroute");
+});
   //cancel.innerHTML = "Close";
   // Write the <div> to the HTML container
   //document.getElementById('socialPosts').appendChild(div);
 }
-function submitRecommendations(id, crawl, dog, family, outdoor, kitchen){
+function submitRecommendations(id, recommendations){
+  family = recommendations['Family Friendly'];
+  dog = recommendations['Dog Friendly'];
+  outdoor = recommendations['Outdoor Seating'];
+  kitchen = recommendations['In House Kitchen'];
+  crawl = recommendations['Crawlable'];
   if(User['email'] == undefined || User['email'] == ""){
     alert("Can't submit recommendations without logging in");
     return;
@@ -472,30 +556,164 @@ function submitRecommendations(id, crawl, dog, family, outdoor, kitchen){
   var json = {};
   json['userEmail'] = User['email'];
   json['UniqueID'] = String(id);
-  if(family != null && family !== undefined) json['Family Friendly'] = makeBlogPostComment.value;
-  if(dog != null && dog !== undefined) json['Dog Friendly'] = imgurlink;
-  if(outdoor != null && outdoor !== undefined) json['Outdoor Seating'] = localStorage.getItem('username');
-  if(kitchen != null && kitchen !== undefined) json['In House Kitchen'] = makeBlogPostBrewery.City + ", " + makeBlogPostBrewery.StateProvince;
-  if(crawl != null && crawl !== undefined) json['Crawlable'] = makeBlogPostBrewery.Latitude;
+  if(family !== null && family !== undefined && family == true) json['Family Friendly'] = true;
+  if(dog !== null && dog !== undefined && dog == true) json['Dog Friendly'] = true;
+  if(outdoor !== null && outdoor !== undefined && outdoor == true) json['Outdoor Seating'] = true;
+  if(kitchen !== null && kitchen !== undefined && kitchen == true) json['In House Kitchen'] = true;
+  if(crawl !== null && crawl !== undefined && crawl == true) json['Crawlable'] = true;
   console.log(json);
   var request = new XMLHttpRequest()
-  request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/post_create', true);
+  request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/recs_create', true);
   request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
   
   // Open a new connection, using the GET request on the URL endpoint
   //request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/login', true)
 
-  request.onreadystatechange = function () {
+  request.onload = function () {
     // Begin accessing JSON data here
     //var data = JSON.parse(this.response)
     if (request.status >= 200 && request.status < 400) {
       return true;
     } else {
-      alert("Something went wrong with your upload!")
-      console.log(this.response);
+      return false;
     }
   }
 
   // Send request
   request.send(JSON.stringify(json))
+}
+//AUTO COMPLETE BREWERY NAMES
+function autocomplete(inp, arr) {
+  /*the autocomplete function takes two arguments,
+  the text field element and an array of possible autocompleted values:*/
+  var currentFocus;
+  /*execute a function when someone writes in the text field:*/
+  inp.addEventListener("input", function(e) {
+      var a, b, i, val = this.value;
+      /*close any already open lists of autocompleted values*/
+      closeAllLists();
+      if (!val) { return false;}
+      currentFocus = -1;
+      /*create a DIV element that will contain the items (values):*/
+      a = document.createElement("DIV");
+      a.setAttribute("id", this.id + "autocomplete-list");
+      a.setAttribute("class", "autocomplete-items");
+      /*append the DIV element as a child of the autocomplete container:*/
+      this.parentNode.appendChild(a);
+      /*for each item in the array...*/
+      for (i = 0; i < arr.length; i++) {
+        /*check if the item starts with the same letters as the text field value:*/
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+          /*create a DIV element for each matching element:*/
+          b = document.createElement("DIV");
+          /*make the matching letters bold:*/
+          b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+          b.innerHTML += arr[i].substr(val.length);
+          /*insert a input field that will hold the current array item's value:*/
+          b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+          /*execute a function when someone clicks on the item value (DIV element):*/
+          b.addEventListener("click", function(e) {
+              /*insert the value for the autocomplete text field:*/
+              inp.value = this.getElementsByTagName("input")[0].value;
+              /*close the list of autocompleted values,
+              (or any other open lists of autocompleted values:*/
+              closeAllLists();
+          });
+          a.appendChild(b);
+        }
+      }
+  });
+  /*execute a function presses a key on the keyboard:*/
+  inp.addEventListener("keydown", function(e) {
+      var x = document.getElementById(this.id + "autocomplete-list");
+      if (x) x = x.getElementsByTagName("div");
+      if (e.keyCode == 40) {
+        /*If the arrow DOWN key is pressed,
+        increase the currentFocus variable:*/
+        currentFocus++;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 38) { //up
+        /*If the arrow UP key is pressed,
+        decrease the currentFocus variable:*/
+        currentFocus--;
+        /*and and make the current item more visible:*/
+        addActive(x);
+      } else if (e.keyCode == 13) {
+        /*If the ENTER key is pressed, prevent the form from being submitted,*/
+        e.preventDefault();
+        if (currentFocus > -1) {
+          /*and simulate a click on the "active" item:*/
+          if (x) x[currentFocus].click();
+        }
+      }
+  });
+  function addActive(x) {
+    /*a function to classify an item as "active":*/
+    if (!x) return false;
+    /*start by removing the "active" class on all items:*/
+    removeActive(x);
+    if (currentFocus >= x.length) currentFocus = 0;
+    if (currentFocus < 0) currentFocus = (x.length - 1);
+    /*add class "autocomplete-active":*/
+    x[currentFocus].classList.add("autocomplete-active");
+  }
+  function removeActive(x) {
+    /*a function to remove the "active" class from all autocomplete items:*/
+    for (var i = 0; i < x.length; i++) {
+      x[i].classList.remove("autocomplete-active");
+    }
+  }
+  function closeAllLists(elmnt) {
+    /*close all autocomplete lists in the document,
+    except the one passed as an argument:*/
+    var x = document.getElementsByClassName("autocomplete-items");
+    for (var i = 0; i < x.length; i++) {
+      if (elmnt != x[i] && elmnt != inp) {
+        x[i].parentNode.removeChild(x[i]);
+      }
+    }
+  }
+  /*execute a function when someone clicks in the document:*/
+  document.addEventListener("click", function (e) {
+      closeAllLists(e.target);
+  })
+};
+function makeImagesZoomable(){
+  $("img.Zoom").unbind("click");
+  $("img.Zoom").click(function(e){
+      imageClickImage.src = e.target.src;
+      if(imageClick.style.display !== "block"){
+        imageClick.style.display = "block";
+      } else {
+        closeImage();
+      }
+  })
+}
+function closeImage(){
+  imageClick.style.display = "none";
+  resetImage();
+}
+function resetImage(){
+  document.querySelector("#imageClickImage").style.transform = "";
+  document.querySelector("#imageClickImage").style.transformOrigin = "";
+  document.querySelector("#imageClickImage").style.height = "";
+  document.querySelector("#imageClickImage").style.width = "";
+  rotateImageButton.style.display = "block";
+  rotateImageBackButton.style.display = "none";
+}
+function rotateImage(){
+  rotateImageButton.style.display = "none";
+  rotateImageBackButton.style.display = "block";
+  if(document.querySelector("#imageClickImage").naturalWidth < document.querySelector("#imageClickImage").naturalHeight){
+    document.querySelector("#imageClickImage").style.height = "100vw";
+    document.querySelector("#imageClickImage").style.width = "unset";
+  } else {
+    document.querySelector("#imageClickImage").style.height = "unset";
+    document.querySelector("#imageClickImage").style.width = "100vh";
+  }
+  document.querySelector("#imageClickImage").style.transform = "rotate(90deg) translateY(-100%)";
+  document.querySelector("#imageClickImage").style.transformOrigin = "top left";
+  // document.querySelector("#imageClickImage").style.height = "100vw";
+  // document.querySelector("#imageClickImage").style.width = "unset";
 }

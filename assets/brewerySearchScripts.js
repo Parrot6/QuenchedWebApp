@@ -4,6 +4,7 @@ function loadInsearchResults(){
     //SEARCH_PARAMS = SEARCH_PARAMS;
     if(SEARCH_PARAMS == undefined){
         location.href='#appNavigation/searchNav'
+        return;
     }
     if(SEARCH_PARAMS.Name){
         var request = new XMLHttpRequest()
@@ -12,7 +13,6 @@ function loadInsearchResults(){
         
         request.onload = function () {
           var data = JSON.parse(this.response)
-          console.log(data);
           if (request.status >= 200 && request.status < 400) {
             searchStatement.innerText = 'Breweries with the phrase: "' + SEARCH_PARAMS["Name"] + '"';
             data.forEach((brewery) => {
@@ -22,36 +22,73 @@ function loadInsearchResults(){
             createSearchBlocks(searchResults, seachResultsHolder);
           } else {
             searchStatement.innerHTML = '<Strong>Search for "' + SEARCH_PARAMS["Name"] + '" failed...</Strong>';
-            console.log('error')
           }
         }
         // Send request
         request.send()
     } else {
         var radius = SEARCH_PARAMS.Radius;
-        var data = {};
         console.log(SEARCH_PARAMS);
-        if(SEARCH_PARAMS['Crawlable'] == true) data['crawlable'] = true;
-        if(SEARCH_PARAMS['FamilyFriendly'] == true) data['familyFriendly'] = true;
-        if(SEARCH_PARAMS['DogFriendly'] == true) data['dogFriendly'] = true;
-        if(SEARCH_PARAMS['InHouseKitchen'] == true) data['inHouseKitchen'] = true;
-        if(SEARCH_PARAMS['OutdoorSeating'] == true) data['outdoorSeating'] = true;
-        var request = new XMLHttpRequest()
+        var filterCount = 0;
+        var filters = "";
+        var data = {};
+        if(SEARCH_PARAMS['Crawlable'] == true) {
+           data['crawlable'] = true;
+           if(filterCount > 0){
+            filters += ", Crawlable";
+           } else {
+               filters += "Crawlable";
+               filterCount++;
+            }
+        }
+        if(SEARCH_PARAMS['FamilyFriendly'] == true){ 
+            data['familyFriendly'] = true;
+            if(filterCount > 0){
+                filters += ", Family Friendly";
+            } else {
+                filters += "Family Friendly";
+                filterCount++;
+             }
+        }
+        if(SEARCH_PARAMS['DogFriendly'] == true){
+          data['dogFriendly'] = true;
+          if(filterCount > 0){
+            filters += ", Dog Friendly";
+           } else {
+            filters += "Dog Friendly";
+            filterCount++;
+            }  
+        } 
+        if(SEARCH_PARAMS['InHouseKitchen'] == true){
+           data['inHouseKitchen'] = true;
+           if(filterCount > 0){
+            filters += ", In House Kitchen";
+           } else {
+            filters += "In House Kitchen";
+            filterCount++;
+            }
+        } 
+        if(SEARCH_PARAMS['OutdoorSeating'] == true){
+            data['outdoorSeating'] = true;
+            if(filterCount > 0){
+                filters += ", Outdoor Seating";
+            } else {
+                filters += "Outdoor Seating";
+                filterCount++;
+            }
+        }
+        var request = new XMLHttpRequest();
         
         // Open a new connection, using the GET request on the URL endpoint
-        request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/breweryByFilter', true)
+        request.open('POST', 'https://mb1zattts4.execute-api.us-east-1.amazonaws.com/dev/breweryByFilter', true);
         request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
         request.onload = function () {
-            var data = JSON.parse(this.response)
-            console.log(data);
+            var res = JSON.parse(this.response);
+            console.log(data, typeof data);
             if (request.status >= 200 && request.status < 400) {
-                var filters = "";
-                data.foreach(key => {
-                    filters += key + ", ";
-                })
-                searchStatement.innerText = "Breweries with the filters: " + filters + " within " + SEARCH_PARAMS["Radius"] + " miles";
-                data.forEach((brewery) => {
-                    console.log(SEARCH_PARAMS["Location"].lat, SEARCH_PARAMS["Location"].lng, brewery.Latitude, brewery.Longitude, radius)
+                searchStatement.innerText = filters + " within " + SEARCH_PARAMS["Radius"] + " miles";
+                searchResults.clear();
+                res.forEach((brewery) => {
                     if(calcCrow(SEARCH_PARAMS["Location"].lat, SEARCH_PARAMS["Location"].lng, brewery.Latitude, brewery.Longitude) <= radius){
                         searchResults.set(brewery.UniqueID, brewery);
                     }
@@ -60,11 +97,9 @@ function loadInsearchResults(){
                 createSearchBlocks(searchResults, seachResultsHolder);
             } else {
                 searchStatement.innerHTML = "<Strong>Search failed....</Strong>";
-                console.log('error')
             }
         }
         // Send request
-        console.log(JSON.stringify(data));
         request.send(JSON.stringify(data))
     }
 }
@@ -72,7 +107,6 @@ function loadInsearchResults(){
 function openSearchBrewery(UniqueID){
     var currentBrewery = searchResults.get(Number(UniqueID));
     sessionStorage.setItem("currentBrewery", JSON.stringify(currentBrewery));
-    console.log(currentBrewery);
     //window.location.pathname = './breweryProfile.html';
     location.href='#openBrewery/'+Number(UniqueID)
   }
@@ -94,7 +128,7 @@ function createSearchBreweryBlock(brewery, location){
     div.innerHTML = div.innerHTML
         .replace(/{Brewery}/g, brewery.Brewery)
         .replace(/{Location}/g, distance)
-        .replace(/{imageUrl}/g, image);
+        .replace(/src=""/g, 'src="' + image + '"');
 
     // Write the <div> to the HTML container
     //console.log(brewery);
@@ -102,6 +136,7 @@ function createSearchBreweryBlock(brewery, location){
 }
 
 function createSearchBlocks(mapList, location){
+    location.innerHTML = "";
     mapList.forEach((brewery,keys) => {
         createSearchBreweryBlock(brewery, location);
     })
